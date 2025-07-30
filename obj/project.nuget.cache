@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "QpHVjVKK8wM=",
+  "success": true,
+  "projectFilePath": "/home/j/projects/csharp/gmtk25/gmtk25.csproj",
+  "expectedPackageFiles": [
+    "/home/j/.nuget/packages/raylib-cs/7.0.1/raylib-cs.7.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
