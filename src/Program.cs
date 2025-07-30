@@ -1,5 +1,7 @@
 ﻿using System.Data;
+using System.Dynamic;
 using System.Numerics;
+using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using Raylib_cs;
 
@@ -49,10 +51,10 @@ class Program
         Game g = new();
         int[,] board =
         {
-            { 0, 1, 0, 1 },
-            { 1, 0, 1, 0 },
-            { 0, 1, 0, 1 },
-            { 1, 0, 1, 0 },
+            { 1, 1, 1, 1 },
+            { 1, 0, 0, 1 },
+            { 1, 0, 0, 1 },
+            { 1, 1, 1, 1 },
         };
         g.board = board;
         g.moveBtnMap = populateBtnMap();
@@ -120,19 +122,81 @@ class Program
         g.mouseHitbox.X = mousePos.X;
         g.mouseHitbox.Y = mousePos.Y;
 
+        MoveBtn? overlapping = null;
         if (Raylib.IsMouseButtonPressed(MouseButton.Left))
         {
-            KeyValuePair<Rectangle, MoveBtn>? overlapping = null;
             foreach (var btn in g.moveBtnMap)
             {
                 Rectangle r = btn.Key;
                 if (Raylib.CheckCollisionRecs(r, g.mouseHitbox))
                 {
-                    overlapping = btn;
+                    overlapping = btn.Value;
                     Console.WriteLine(btn.Value.ToString());
                 }
             }
         }
+        if (overlapping == null)
+        {
+            return;
+        }
+
+        // get relevant row or column
+        // shift all values around (wrap first and last)
+        //update board if not done in place
+        if (overlapping.type == RowOrCol.ROW && overlapping.dir == 1)
+        {
+            //shift right
+            int[] row = GetRow(g.board, overlapping.index);
+            //int last = g.board[3, overlapping.index];
+            for (int x = 1; x < 4; x++)
+            {
+                g.board[x, overlapping.index] = row[x - 1];
+            }
+            g.board[0, overlapping.index] = row[3];
+        }
+
+        if (overlapping.type == RowOrCol.ROW && overlapping.dir == -1)
+        {
+            int[] row = GetRow(g.board, overlapping.index);
+            //int last = g.board[3, overlapping.index];
+            for (int x = 0; x < 3; x++)
+            {
+                g.board[x, overlapping.index] = row[x + 1];
+            }
+            g.board[3, overlapping.index] = row[0];
+        }
+
+        if (overlapping.type == RowOrCol.COL && overlapping.dir == 1)
+        {
+            int[] col = GetCol(g.board, overlapping.index);
+            //int last = g.board[3, overlapping.index];
+            for (int y = 1; y < 4; y++)
+            {
+                g.board[overlapping.index, y] = col[y - 1];
+            }
+            g.board[overlapping.index, 0] = col[3];
+        }
+
+        if (overlapping.type == RowOrCol.COL && overlapping.dir == -1)
+        {
+            int[] col = GetCol(g.board, overlapping.index);
+            //int last = g.board[3, overlapping.index];
+            for (int y = 0; y < 3; y++)
+            {
+                g.board[overlapping.index, y] = col[y + 1];
+            }
+            g.board[overlapping.index, 3] = col[0];
+        }
+    }
+
+    public static int[] GetRow(int[,] matrix, int rowIndex)
+    {
+        return Enumerable.Range(0, matrix.GetLength(0)).Select(x => matrix[x, rowIndex]).ToArray();
+    }
+
+    public static int[] GetCol(int[,] matrix, int colIndex)
+    {
+        return Enumerable.Range(0, matrix.GetLength(1)).Select(x => matrix[colIndex, x]).ToArray();
     }
 
     public static void Draw(Game g)
