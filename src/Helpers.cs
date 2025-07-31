@@ -34,6 +34,11 @@ public struct Vec2i(int x, int y)
 
     public static implicit operator Vec2(Vec2i v) => new Vec2(v.X, v.Y);
 
+    public override string ToString()
+    {
+        return $"{this.X},{this.Y}";
+    }
+
     public static Vec2i operator +(Vec2i v1, Direction dir)
     {
         return dir switch
@@ -172,6 +177,16 @@ public static class JLib
         return multi;
     }
 
+    public static int[] GetRow(int[,] matrix, int rowIndex)
+    {
+        return Enumerable.Range(0, matrix.GetLength(0)).Select(x => matrix[x, rowIndex]).ToArray();
+    }
+
+    public static int[] GetCol(int[,] matrix, int colIndex)
+    {
+        return Enumerable.Range(0, matrix.GetLength(1)).Select(x => matrix[colIndex, x]).ToArray();
+    }
+
     public static T Get<T>(T[,] data, Vec2i pos)
     {
         return data[pos.X, pos.Y];
@@ -186,6 +201,9 @@ public static class JLib
     {
         return new(Wrap(value.X, min.X, max.X), Wrap(value.Y, min.Y, max.Y));
     }
+
+    public static void V2Wrap(this Vec2 value, Vec2 min, Vec2 max) =>
+        value = new(Wrap(value.X, min.X, max.X), Wrap(value.Y, min.Y, max.Y));
 
     public static int[] IntersectRanges(int[] r1, int[] r2)
     {
