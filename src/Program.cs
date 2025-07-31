@@ -25,6 +25,10 @@ class Program
         {
             Puzzle.Update(g);
             Draw.DrawFrame(g);
+            if (Raylib.IsKeyPressed(KeyboardKey.R))
+            {
+                g = new();
+            }
         }
 
         Raylib.CloseWindow();

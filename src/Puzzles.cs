@@ -10,6 +10,7 @@ public enum TileType
     NODE,
     POSITIVE,
     NEGATIVE,
+    BOX,
 }
 
 public enum RowOrCol
@@ -43,9 +44,9 @@ public class Game
         int[,] board =
         {
             { 4, 1, 3, 1 },
-            { 1, 1, 1, 0 },
-            { 0, 1, 0, 0 },
-            { 0, 0, 0, 0 },
+            { 1, 1, 1, 5 },
+            { 0, 1, 1, 1 },
+            { 0, 5, 0, 0 },
         };
         this.board = board;
         this.moveBtnMap = Puzzle.populateBtnMap();
@@ -122,9 +123,12 @@ public class Puzzle()
 
         // get relevant row or column
         // shift all values around (wrap first and last)
-        //update board if not done in place
         if (overlapping.type == RowOrCol.ROW && overlapping.dir == 1)
         {
+            if (g.board[3, overlapping.index] == (int)TileType.BOX)
+            {
+                return;
+            }
             //shift right
             int[] row = JLib.GetRow(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
@@ -137,6 +141,10 @@ public class Puzzle()
 
         if (overlapping.type == RowOrCol.ROW && overlapping.dir == -1)
         {
+            if (g.board[0, overlapping.index] == (int)TileType.BOX)
+            {
+                return;
+            }
             int[] row = JLib.GetRow(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
             for (int x = 0; x < 3; x++)
@@ -148,6 +156,10 @@ public class Puzzle()
 
         if (overlapping.type == RowOrCol.COL && overlapping.dir == 1)
         {
+            if (g.board[overlapping.index, 3] == (int)TileType.BOX)
+            {
+                return;
+            }
             int[] col = JLib.GetCol(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
             for (int y = 1; y < 4; y++)
@@ -159,6 +171,10 @@ public class Puzzle()
 
         if (overlapping.type == RowOrCol.COL && overlapping.dir == -1)
         {
+            if (g.board[overlapping.index, 0] == (int)TileType.BOX)
+            {
+                return;
+            }
             int[] col = JLib.GetCol(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
             for (int y = 0; y < 3; y++)

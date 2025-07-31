@@ -38,6 +38,9 @@ public static class Draw
                     case (int)TileType.NEGATIVE:
                         Raylib.DrawRectangle(position.X, position.Y, 24, 24, Color.Blue);
                         break;
+                    case (int)TileType.BOX:
+                        Raylib.DrawRectangle(position.X, position.Y, 24, 24, Color.Black);
+                        break;
                 }
             }
         }
