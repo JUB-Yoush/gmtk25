@@ -7,7 +7,7 @@ using Raylib_cs;
 
 namespace Gmtk;
 
-class Tile { }
+class Tile { } //I think you need an enumerator for every tile type, you don't need one for every whatever you said im just reminding you <3
 
 enum TileType
 {
