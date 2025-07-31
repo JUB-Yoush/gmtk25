@@ -1,8 +1,9 @@
+using Puzzles;
 using Raylib_cs;
 
 public static class Draw
 {
-    public static void DrawFrame(Game g)
+    public static void DrawFrame(Puzzle g)
     {
         int[,] board = g.board;
         int gap = 32;

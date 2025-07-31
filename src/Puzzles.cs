@@ -1,5 +1,10 @@
+using System.Diagnostics;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using Helper;
 using Raylib_cs;
+
+namespace Puzzles;
 
 class Tile { }
 
@@ -31,38 +36,24 @@ public class MoveBtn(RowOrCol type, int dir, int index)
     }
 }
 
-public class Game
+public class Puzzle(int[,] board, Vec2i size)
 {
-    public int[,] board = new int[4, 4];
+    public static readonly Vec2i GRID_START_POS = new(100, 100);
+    public static readonly Vec2i BTN_START_POS = new(100 - 32, 100 - 32);
+
+    public Vec2i puzzleSize = size;
+    public int[,] board = board;
     public Rectangle mouseHitbox = new();
-    public Dictionary<Rectangle, MoveBtn> moveBtnMap = new();
+    public Dictionary<Rectangle, MoveBtn> moveBtnMap = populateBtnMap(size);
     public bool solved = false;
     public List<Vec2i> route = [];
 
-    public Game()
-    {
-        int[,] board =
-        {
-            { 4, 1, 3, 1 },
-            { 1, 1, 1, 5 },
-            { 0, 1, 1, 1 },
-            { 0, 5, 0, 0 },
-        };
-        this.board = board;
-        this.moveBtnMap = Puzzle.populateBtnMap();
-    }
-}
-
-public class Puzzle()
-{
-    public static readonly Vec2i GRID_START_POS = new(100, 100);
-    public static readonly Vec2i BTN_START_POS = new(100 - 24, 100 - 24);
-
-    public static Dictionary<Rectangle, MoveBtn> populateBtnMap()
+    public static Dictionary<Rectangle, MoveBtn> populateBtnMap(Vec2i size)
     {
         Dictionary<Rectangle, MoveBtn> res = new();
+        Console.WriteLine(size.ToString());
 
-        for (int x = 1; x < 5; x++)
+        for (int x = 1; x < size.X + 1; x++)
         {
             int gap = 32;
             Vec2i position = BTN_START_POS + new Vec2i(x * gap, 0);
@@ -70,32 +61,32 @@ public class Puzzle()
             res.Add(new(position.toVec2(), 24, 24), new(RowOrCol.COL, -1, x - 1));
         }
 
-        for (int x = 1; x < 5; x++)
+        for (int x = 1; x < size.X + 1; x++)
         {
             int gap = 32;
-            Vec2i position = BTN_START_POS + new Vec2i(x * gap, 5 * gap);
+            Vec2i position = BTN_START_POS + new Vec2i(x * gap, (size.Y + 1) * gap);
             //position.X = 24;
             res.Add(new(position.toVec2(), 24, 24), new(RowOrCol.COL, 1, x - 1));
         }
 
-        for (int y = 1; y < 5; y++)
+        for (int y = 1; y < size.Y + 1; y++)
         {
             int gap = 32;
             Vec2i position = BTN_START_POS + new Vec2i(0, y * gap);
             res.Add(new(position.toVec2(), 24, 24), new(RowOrCol.ROW, -1, y - 1));
         }
 
-        for (int y = 1; y < 5; y++)
+        for (int y = 1; y < size.Y + 1; y++)
         {
             int gap = 32;
-            Vec2i position = BTN_START_POS + new Vec2i(5 * gap, y * gap);
+            Vec2i position = BTN_START_POS + new Vec2i((size.X + 1) * gap, y * gap);
             res.Add(new(position.toVec2(), 24, 24), new(RowOrCol.ROW, 1, y - 1));
         }
 
         return res;
     }
 
-    public static void Update(Game g)
+    public static void Update(Puzzle g)
     {
         Vec2 mousePos = Raylib.GetMousePosition();
         g.mouseHitbox.X = mousePos.X;
@@ -120,23 +111,24 @@ public class Puzzle()
         {
             return;
         }
+        Vec2i size = g.puzzleSize;
 
         // get relevant row or column
         // shift all values around (wrap first and last)
         if (overlapping.type == RowOrCol.ROW && overlapping.dir == 1)
         {
-            if (g.board[3, overlapping.index] == (int)TileType.BOX)
+            if (g.board[size.X - 1, overlapping.index] == (int)TileType.BOX)
             {
                 return;
             }
             //shift right
             int[] row = JLib.GetRow(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
-            for (int x = 1; x < 4; x++)
+            for (int x = 1; x < size.X; x++)
             {
                 g.board[x, overlapping.index] = row[x - 1];
             }
-            g.board[0, overlapping.index] = row[3];
+            g.board[0, overlapping.index] = row[size.X - 1];
         }
 
         if (overlapping.type == RowOrCol.ROW && overlapping.dir == -1)
@@ -147,26 +139,26 @@ public class Puzzle()
             }
             int[] row = JLib.GetRow(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
-            for (int x = 0; x < 3; x++)
+            for (int x = 0; x < size.X - 1; x++)
             {
                 g.board[x, overlapping.index] = row[x + 1];
             }
-            g.board[3, overlapping.index] = row[0];
+            g.board[size.X - 1, overlapping.index] = row[0];
         }
 
         if (overlapping.type == RowOrCol.COL && overlapping.dir == 1)
         {
-            if (g.board[overlapping.index, 3] == (int)TileType.BOX)
+            if (g.board[overlapping.index, size.Y - 1] == (int)TileType.BOX)
             {
                 return;
             }
             int[] col = JLib.GetCol(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
-            for (int y = 1; y < 4; y++)
+            for (int y = 1; y < size.Y; y++)
             {
                 g.board[overlapping.index, y] = col[y - 1];
             }
-            g.board[overlapping.index, 0] = col[3];
+            g.board[overlapping.index, 0] = col[size.Y - 1];
         }
 
         if (overlapping.type == RowOrCol.COL && overlapping.dir == -1)
@@ -177,11 +169,11 @@ public class Puzzle()
             }
             int[] col = JLib.GetCol(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
-            for (int y = 0; y < 3; y++)
+            for (int y = 0; y < size.Y - 1; y++)
             {
                 g.board[overlapping.index, y] = col[y + 1];
             }
-            g.board[overlapping.index, 3] = col[0];
+            g.board[overlapping.index, size.Y - 1] = col[0];
         }
     }
 
@@ -195,6 +187,7 @@ public class Puzzle()
             List<Vec2i> visited
         )
         {
+            Vec2i size = new(board.GetLength(0), board.GetLength(1));
             if (Raylib.IsKeyPressed(KeyboardKey.D))
             {
                 Console.WriteLine("debug catcher");
@@ -204,7 +197,7 @@ public class Puzzle()
                 //Console.WriteLine(curr.X.ToString(), curr.Y.ToString());
                 Vec2i newDir = curr + dir;
                 if (
-                    Vec2i.Clamp(newDir, new(0, 0), new(3, 3)) != newDir
+                    Vec2i.Clamp(newDir, new(0, 0), size) != newDir
                     || board[newDir.X, newDir.Y] == (int)TileType.EMPTY
                     || visited.Contains(newDir)
                 )
@@ -245,5 +238,25 @@ public class Puzzle()
             }
         }
         return new(0, 0); //every board should have one, should never reach
+    }
+}
+
+public static class PuzzleLoader
+{
+    public static Puzzle LoadPuzzle()
+    {
+        int[,] puzzledata =
+        {
+            { 1, 0, 0, 5, 0 },
+            { 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0 },
+            { 1, 0, 0, 0, 0 },
+            { 1, 0, 0, 0, 0 },
+            { 1, 0, 0, 0, 0 },
+            { 1, 0, 0, 0, 0 },
+        };
+
+        Puzzle p = new(puzzledata, new(puzzledata.GetLength(0), puzzledata.GetLength(1)));
+        return p;
     }
 }

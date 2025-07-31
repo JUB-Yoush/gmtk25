@@ -34,6 +34,11 @@ public struct Vec2i(int x, int y)
 
     public static implicit operator Vec2(Vec2i v) => new Vec2(v.X, v.Y);
 
+    public override string ToString()
+    {
+        return $"{this.X},{this.Y}";
+    }
+
     public static Vec2i operator +(Vec2i v1, Direction dir)
     {
         return dir switch

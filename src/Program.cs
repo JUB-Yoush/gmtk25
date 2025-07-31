@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using Helper;
+using Puzzles;
 using Raylib_cs;
 
 namespace Gmtk;
@@ -19,7 +20,7 @@ class Program
     {
         Raylib.InitWindow(800, 480, "Hello World");
         Raylib.SetTargetFPS(60);
-        Game g = new();
+        Puzzle g = PuzzleLoader.LoadPuzzle();
 
         while (!Raylib.WindowShouldClose())
         {
@@ -27,7 +28,7 @@ class Program
             Draw.DrawFrame(g);
             if (Raylib.IsKeyPressed(KeyboardKey.R))
             {
-                g = new();
+                g = PuzzleLoader.LoadPuzzle();
             }
         }
 
