@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Net.Mail;
 using System.Numerics;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
@@ -9,12 +10,15 @@ using Raylib_cs;
 
 namespace Gmtk;
 
-class Tile { } //I think you need an enumerator for every tile type, you don't need one for every whatever you said im just reminding you <3
+class Tile { }
 
 enum TileType
 {
     EMPTY,
-    FILLED,
+    WIRE,
+    NODE,
+    POSITIVE,
+    NEGATIVE,
 }
 
 enum RowOrCol
@@ -40,6 +44,8 @@ class Game
     public int[,] board = new int[4, 4];
     public Rectangle mouseHitbox = new();
     public Dictionary<Rectangle, MoveBtn> moveBtnMap = new();
+    public bool solved = false;
+    public List<Vec2i> route = [];
 }
 
 class Program
@@ -50,13 +56,14 @@ class Program
     public static void Main()
     {
         Raylib.InitWindow(800, 480, "Hello World");
+        Raylib.SetTargetFPS(60);
         Game g = new();
         int[,] board =
         {
+            { 4, 3, 1, 0 },
+            { 1, 0, 1, 0 },
             { 1, 1, 1, 0 },
-            { 1, 0, 0, 1 },
-            { 1, 0, 0, 1 },
-            { 1, 1, 1, 0 },
+            { 0, 0, 1, 0 },
         };
         g.board = board;
         g.moveBtnMap = populateBtnMap();
@@ -104,17 +111,6 @@ class Program
             res.Add(new(position.toVec2(), 24, 24), new(RowOrCol.ROW, 1, y - 1));
         }
 
-        /*
-
-        for (int y = 0; y < Room.ROOM_SIZE.Y; y++)
-        {
-            room.floorlayer[0, y] = (int)TileType.WALL;
-        }
-        for (int y = 0; y < Room.ROOM_SIZE.Y; y++)
-        {
-            room.floorlayer[Room.MAX_ROOM_INDEX.X, y] = (int)TileType.WALL;
-        }
-        */
         return res;
     }
 
@@ -133,15 +129,16 @@ class Program
                 if (Raylib.CheckCollisionRecs(r, g.mouseHitbox))
                 {
                     overlapping = btn.Value;
-                    Console.WriteLine(btn.Value.ToString());
+                    //Console.WriteLine(btn.Value.ToString());
                 }
             }
         }
-        if (isConnected(g.board))
-            if (overlapping == null)
-            {
-                return;
-            }
+        g.solved = isConnected(g.board).circuit;
+        g.route = isConnected(g.board).visited;
+        if (overlapping == null)
+        {
+            return;
+        }
 
         // get relevant row or column
         // shift all values around (wrap first and last)
@@ -192,7 +189,67 @@ class Program
         }
     }
 
-    public static bool isConnected() { }
+    public static (bool circuit, int nodeCount, List<Vec2i> visited) isConnected(int[,] board)
+    {
+        Vec2i positiveTilePos = GetTile(TileType.POSITIVE, board);
+        (bool circuit, int nodeCount, List<Vec2i> visited) dfs(
+            int[,] board,
+            Vec2i curr,
+            int nodeCount,
+            List<Vec2i> visited
+        )
+        {
+            if (Raylib.IsKeyPressed(KeyboardKey.D))
+            {
+                Console.WriteLine("debug catcher");
+            }
+            foreach (Direction dir in JLib.DIR_ARRAY)
+            {
+                //Console.WriteLine(curr.X.ToString(), curr.Y.ToString());
+                Vec2i newDir = curr + dir;
+                if (
+                    Vec2i.Clamp(newDir, new(0, 0), new(3, 3)) != newDir
+                    || board[newDir.X, newDir.Y] == (int)TileType.EMPTY
+                    || visited.Contains(newDir)
+                )
+                {
+                    continue;
+                }
+                if (board[newDir.X, newDir.Y] == (int)TileType.NEGATIVE)
+                {
+                    if (visited.Count == 1)
+                    {
+                        continue;
+                    }
+                    visited.Remove(positiveTilePos);
+                }
+                if (board[newDir.X, newDir.Y] == (int)TileType.POSITIVE)
+                {
+                    visited.Add(newDir);
+                    return (true, nodeCount, visited);
+                }
+                visited.Add(newDir);
+                return dfs(board, newDir, nodeCount, visited);
+            }
+            return (false, 0, visited);
+        }
+        return dfs(board, positiveTilePos, 0, [positiveTilePos]);
+    }
+
+    public static Vec2i GetTile(TileType tileType, int[,] board)
+    {
+        for (int x = 0; x < board.GetLength(0); x++)
+        {
+            for (int y = 0; y < board.GetLength(1); y++)
+            {
+                if (board[x, y] == (int)tileType)
+                {
+                    return new(x, y);
+                }
+            }
+        }
+        return new(0, 0); //every board should have one, should never reach
+    }
 
     public static void Draw(Game g)
     {
@@ -216,15 +273,35 @@ class Program
                 switch (board[x, y])
                 {
                     case (int)TileType.EMPTY:
+                        Raylib.DrawRectangle(position.X, position.Y, 24, 24, Color.Gray);
+                        break;
+                    case (int)TileType.WIRE:
+                        Raylib.DrawRectangle(position.X, position.Y, 24, 24, Color.Green);
+                        break;
+                    case (int)TileType.NODE:
+                        Raylib.DrawRectangle(position.X, position.Y, 24, 24, Color.Pink);
+                        break;
+                    case (int)TileType.POSITIVE:
                         Raylib.DrawRectangle(position.X, position.Y, 24, 24, Color.Red);
                         break;
-                    case (int)TileType.FILLED:
+                    case (int)TileType.NEGATIVE:
                         Raylib.DrawRectangle(position.X, position.Y, 24, 24, Color.Blue);
                         break;
                 }
             }
         }
+        foreach (var pos in g.route)
+        {
+            Vec2i position = GRID_START_POS + new Vec2i(pos.X * gap, pos.Y * gap);
+            Raylib.DrawRectangle(position.X, position.Y, 8, 8, Color.Pink);
+        }
+
         Raylib.DrawRectangle((int)g.mouseHitbox.X - 4, (int)g.mouseHitbox.Y - 4, 8, 8, Color.Green);
+        if (g.solved)
+        {
+            Raylib.DrawText("solved", 10, 10, 20, Color.Black);
+            Raylib.DrawText($"{g.route.Count}", 10, 30, 20, Color.Black);
+        }
         Raylib.EndDrawing();
     }
 }
