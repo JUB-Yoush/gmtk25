@@ -177,12 +177,12 @@ public static class JLib
         return multi;
     }
 
-    public static int[] GetRow(int[,] matrix, int rowIndex)
+    public static T[] GetRow<T>(T[,] matrix, int rowIndex)
     {
         return Enumerable.Range(0, matrix.GetLength(0)).Select(x => matrix[x, rowIndex]).ToArray();
     }
 
-    public static int[] GetCol(int[,] matrix, int colIndex)
+    public static T[] GetCol<T>(T[,] matrix, int colIndex)
     {
         return Enumerable.Range(0, matrix.GetLength(1)).Select(x => matrix[colIndex, x]).ToArray();
     }

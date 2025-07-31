@@ -21,6 +21,7 @@ class Program
         Raylib.InitWindow(800, 480, "Hello World");
         Raylib.SetTargetFPS(60);
         Puzzle g = PuzzleLoader.LoadPuzzle();
+        Draw.LoadTextures();
 
         while (!Raylib.WindowShouldClose())
         {
