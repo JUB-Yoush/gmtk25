@@ -1,8 +1,10 @@
 ﻿using System.Data;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Numerics;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
+using Helper;
 using Raylib_cs;
 
 namespace Gmtk;
@@ -51,10 +53,10 @@ class Program
         Game g = new();
         int[,] board =
         {
-            { 1, 1, 1, 1 },
+            { 1, 1, 1, 0 },
             { 1, 0, 0, 1 },
             { 1, 0, 0, 1 },
-            { 1, 1, 1, 1 },
+            { 1, 1, 1, 0 },
         };
         g.board = board;
         g.moveBtnMap = populateBtnMap();
@@ -135,10 +137,11 @@ class Program
                 }
             }
         }
-        if (overlapping == null)
-        {
-            return;
-        }
+        if (isConnected(g.board))
+            if (overlapping == null)
+            {
+                return;
+            }
 
         // get relevant row or column
         // shift all values around (wrap first and last)
@@ -146,7 +149,7 @@ class Program
         if (overlapping.type == RowOrCol.ROW && overlapping.dir == 1)
         {
             //shift right
-            int[] row = GetRow(g.board, overlapping.index);
+            int[] row = JLib.GetRow(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
             for (int x = 1; x < 4; x++)
             {
@@ -157,7 +160,7 @@ class Program
 
         if (overlapping.type == RowOrCol.ROW && overlapping.dir == -1)
         {
-            int[] row = GetRow(g.board, overlapping.index);
+            int[] row = JLib.GetRow(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
             for (int x = 0; x < 3; x++)
             {
@@ -168,7 +171,7 @@ class Program
 
         if (overlapping.type == RowOrCol.COL && overlapping.dir == 1)
         {
-            int[] col = GetCol(g.board, overlapping.index);
+            int[] col = JLib.GetCol(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
             for (int y = 1; y < 4; y++)
             {
@@ -179,7 +182,7 @@ class Program
 
         if (overlapping.type == RowOrCol.COL && overlapping.dir == -1)
         {
-            int[] col = GetCol(g.board, overlapping.index);
+            int[] col = JLib.GetCol(g.board, overlapping.index);
             //int last = g.board[3, overlapping.index];
             for (int y = 0; y < 3; y++)
             {
@@ -189,15 +192,7 @@ class Program
         }
     }
 
-    public static int[] GetRow(int[,] matrix, int rowIndex)
-    {
-        return Enumerable.Range(0, matrix.GetLength(0)).Select(x => matrix[x, rowIndex]).ToArray();
-    }
-
-    public static int[] GetCol(int[,] matrix, int colIndex)
-    {
-        return Enumerable.Range(0, matrix.GetLength(1)).Select(x => matrix[colIndex, x]).ToArray();
-    }
+    public static bool isConnected() { }
 
     public static void Draw(Game g)
     {
