@@ -1,0 +1,16 @@
+{
+    "OpeningDialogue": {
+        "dialogue": [
+        {
+            "speaker": "mac",
+            "text": "I've been pining for you.",
+            "emotion": ""
+        },
+        {
+            "speaker": "astrid",
+            "text": "The stars shining brighter.",
+            "emotion": ""
+        }
+        ]
+    }
+}
