@@ -1,5 +1,5 @@
 {
-    "OpeningDialogue": {
+  
         "dialogue": [
         {
             "speaker": "mac",
@@ -82,5 +82,5 @@
             "emotion": "happy"
         }
         ]
-    }
+    
 }
