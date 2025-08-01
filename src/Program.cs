@@ -34,25 +34,25 @@ class Program
                 case 1:
                     break;
                 case 2:
-                
-            Puzzle.Update(g);
-            Draw.DrawFrame(g);
-            if (Raylib.IsKeyPressed(KeyboardKey.R))
-            {
-                g = PuzzleLoader.LoadPuzzle();
-            }
-            if (Raylib.IsKeyPressed(KeyboardKey.One))
-            {
-                PuzzleLoader.puzzleIndex++;
-                g = PuzzleLoader.LoadPuzzle();
-            }
+
+                    Puzzle.Update(g);
+                    Draw.DrawFrame(g);
+                    if (Raylib.IsKeyPressed(KeyboardKey.R))
+                    {
+                        g = PuzzleLoader.LoadPuzzle();
+                    }
+                    if (Raylib.IsKeyPressed(KeyboardKey.One))
+                    {
+                        PuzzleLoader.puzzleIndex++;
+                        g = PuzzleLoader.LoadPuzzle();
+                    }
 
 
                     break;
                 case 3:
                     break;
             }
-           
+
 
 
         }
