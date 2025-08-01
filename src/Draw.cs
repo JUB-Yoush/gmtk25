@@ -1,5 +1,7 @@
+using System.Data.Common;
 using System.Diagnostics;
 using System.Reflection;
+using Helper;
 using Puzzles;
 using Raylib_cs;
 
@@ -36,6 +38,7 @@ public static class Draw
 
     public static void DrawFrame(Puzzle g)
     {
+        g.route = Puzzle.getCircuitStatus(g.board).visited;
         TileType[,] board = g.board;
         int gap = Puzzle.TILEGAP;
         Raylib.BeginDrawing();
@@ -78,25 +81,25 @@ public static class Draw
                         DrawTile(position, new(3, 1));
                         break;
                     case TileType.WIRE_UD:
-                        DrawTile(position, new(0, 1));
+                        DrawTile(position, getUV(x, y, new(0, 1), g.route));
                         break;
                     case TileType.WIRE_LR:
-                        DrawTile(position, new(0, 1), 90);
+                        DrawTile(position, getUV(x, y, new(0, 1), g.route), 90);
                         break;
                     case TileType.WIRE_LD:
-                        DrawTile(position, new(1, 1), 0);
+                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 0);
                         break;
                     case TileType.WIRE_LU:
-                        DrawTile(position, new(1, 1), 90);
+                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 90);
                         break;
                     case TileType.WIRE_RU:
-                        DrawTile(position, new(1, 1), 180);
+                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 180);
                         break;
                     case TileType.WIRE_RD:
-                        DrawTile(position, new(1, 1), 270);
+                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 270);
                         break;
                     case TileType.NODE:
-                        DrawTile(position, new(2, 0));
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route));
                         break;
                     case TileType.POSITIVE:
                         DrawTile(position, new(1, 0));
@@ -123,6 +126,48 @@ public static class Draw
             Raylib.DrawText($"{g.route.Count}", 10, 30, 20, Color.Black);
         }
         Raylib.EndDrawing();
+    }
+
+    public static Vec2 getUV(int x, int y, Vec2i uv, List<Vec2i> elecRoute)
+    {
+        if (elecRoute.Contains(new(x, y)))
+        {
+            return (uv + Direction.DOWN).toVec2();
+        }
+        return uv;
+        // if (board[x, y] == TileType.NODE)
+        // {
+        //     if (elecRoute.Contains(new(x, y)))
+        //     {
+        //         return new(2, 1);
+        //     }
+        //     else
+        //     {
+        //         return new(2, 0);
+        //     }
+        // }
+        // if (board[x, y] == TileType.WIRE_LR || board[x, y] == TileType.WIRE_UD)
+        // {
+        //     if (elecRoute.Contains(new(x, y)))
+        //     {
+        //         return new(0, 1);
+        //     }
+        //     else
+        //     {
+        //         return new(0, 2);
+        //     }
+        // }
+        // if (
+        //     (
+        //         board[x, y] == TileType.WIRE_LD
+        //         || board[x, y] == TileType.WIRE_LU
+        //         || board[x, y] == TileType.WIRE_RD
+        //         || board[x, y] == TileType.WIRE_RU
+        //     ) && elecRoute.Contains(new(x, y))
+        // )
+        // {
+        //     return new(1, 2);
+        // }
     }
 
     public static void DrawTile(
@@ -153,7 +198,7 @@ public static class Draw
             GetTexture("puzzleTiles"),
             sourceRect,
             destRect,
-            new(12, 12),
+            new(Puzzle.TILESIZE / 2, Puzzle.TILESIZE / 2),
             rotation,
             Color.White
         );

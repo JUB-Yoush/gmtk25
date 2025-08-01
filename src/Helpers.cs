@@ -1,8 +1,10 @@
 namespace Helper;
 
+using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
 using System.Runtime;
+using System.Runtime.CompilerServices;
 using Helper;
 
 public enum Direction
@@ -205,6 +207,11 @@ public static class JLib
     public static void V2Wrap(this Vec2 value, Vec2 min, Vec2 max) =>
         value = new(Wrap(value.X, min.X, max.X), Wrap(value.Y, min.Y, max.Y));
 
+    public static List<T> CloneList<T>(List<T> data)
+    {
+        return [.. data.ConvertAll(x => x)];
+    }
+
     public static int[] IntersectRanges(int[] r1, int[] r2)
     {
         // return the larger start and smaller end
@@ -226,6 +233,27 @@ public static class JLib
             Direction.RIGHT => new(1, 0),
             _ => new(0, -1),
         };
+    }
+
+    public static Direction Vec2Dir(Vec2i v)
+    {
+        if (v == new Vec2i(0, -1))
+        {
+            return Direction.UP;
+        }
+        if (v == new Vec2i(0, 1))
+        {
+            return Direction.DOWN;
+        }
+        if (v == new Vec2i(1, 0))
+        {
+            return Direction.RIGHT;
+        }
+        if (v == new Vec2i(-1, 0))
+        {
+            return Direction.LEFT;
+        }
+        return Direction.DOWN;
     }
 
     public static Direction InvertDir(Direction dir)

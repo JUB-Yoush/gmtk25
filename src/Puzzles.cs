@@ -53,8 +53,8 @@ public class MoveBtn(RowOrCol type, int dir, int index)
 public class Puzzle(TileType[,] board, Vec2i size)
 {
     public static readonly Vec2i GRID_START_POS = new(100, 100);
-    public static int TILESIZE = 24;
-    public static int TILEGAP = 26;
+    public static int TILESIZE = 24 * 2;
+    public static int TILEGAP = 26 * 2;
     public static readonly Vec2i BTN_START_POS = new(
         GRID_START_POS.X - TILESIZE,
         GRID_START_POS.Y - TILESIZE
@@ -191,6 +191,27 @@ public class Puzzle(TileType[,] board, Vec2i size)
         }
     }
 
+    public static int CanConnect(Vec2i t1Pos, Vec2i t2Pos, TileType[,] board)
+    {
+        TileType t1 = board[t1Pos.X, t1Pos.Y];
+        TileType t2 = board[t2Pos.X, t2Pos.Y];
+        if (t1 == TileType.POSITIVE)
+        {
+            //Console.WriteLine("");
+        }
+        Direction checkDir = JLib.Vec2Dir(t2Pos - t1Pos);
+        bool t1Good = getConnections(t1).Contains(checkDir);
+        bool t2Good = getConnections(t2).Contains(JLib.InvertDir(checkDir));
+        if (t1Good && t2Good)
+        {
+            return 1;
+        }
+
+        //return getConnections(t1).Intersect(getConnections(t1)).ToArray().Length;
+
+        return 0;
+    }
+
     public static (bool circuit, int nodeCount, List<Vec2i> visited) getCircuitStatus(
         TileType[,] board
     )
@@ -205,7 +226,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             Vec2i size = new(board.GetLength(0), board.GetLength(1));
             Vec2i maxIndex = new(size.X - 1, size.Y - 1);
-            if (Raylib.IsKeyPressed(KeyboardKey.D))
+            if (Raylib.IsKeyDown(KeyboardKey.D))
             {
                 Console.WriteLine("debug catcher");
             }
@@ -215,7 +236,9 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 Vec2i newDir = curr + dir;
                 if (
                     Vec2i.Clamp(newDir, new(0, 0), maxIndex) != newDir
-                    || board[newDir.X, newDir.Y] == (int)TileType.EMPTY
+                    || board[newDir.X, newDir.Y] == TileType.EMPTY
+                    || board[newDir.X, newDir.Y] == TileType.BOX
+                    || CanConnect(curr, newDir, board) == 0
                     || visited.Contains(newDir)
                 )
                 {
@@ -232,10 +255,10 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 if (board[newDir.X, newDir.Y] == TileType.POSITIVE)
                 {
                     visited.Add(newDir);
-                    return (true, nodeCount, visited);
+                    return (true, nodeCount, JLib.CloneList(visited));
                 }
                 visited.Add(newDir);
-                return dfs(board, newDir, nodeCount, visited);
+                return dfs(board, newDir, nodeCount, JLib.CloneList(visited));
             }
             return (false, 0, visited);
         }
@@ -278,33 +301,55 @@ public class Puzzle(TileType[,] board, Vec2i size)
 
 public static class PuzzleLoader
 {
+    public static int puzzleIndex = 0;
+    public const int PUZZLE_COUNT = 2;
+
     public static Puzzle LoadPuzzle()
     {
-        int[,] puzzledata =
+        int[,] p1 =
         {
-            { 8, 9, 10, 0, 0 },
-            { 4, 6, 0, 0, 0 },
+            { 8, 9, 0, 0, 0 },
+            { 3, 4, 1, 1, 0 },
             { 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0 },
         };
+        int[,] p2 =
+        {
+            { 8, 9, 0, 0, 0 },
+            { 3, 4, 1, 1, 0 },
+            { 0, 0, 7, 1, 0 },
+            { 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0 },
+        };
 
+        int[,] p3 =
+        {
+            { 8, 9, 10, 0, 0 },
+            { 3, 4, 1, 1, 0 },
+            { 0, 0, 7, 1, 0 },
+            { 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0 },
+        };
+        int[][,] puzzleList = [p1, p2, p3];
+
+        int[,] currentPuzzle = puzzleList[puzzleIndex];
         Puzzle p = new(
-            ParsePuzzleData(puzzledata),
-            new(puzzledata.GetLength(0), puzzledata.GetLength(1))
+            ParsePuzzleData(currentPuzzle),
+            new(currentPuzzle.GetLength(0), currentPuzzle.GetLength(1))
         );
         return p;
     }
 
     public static TileType[,] ParsePuzzleData(int[,] board)
     {
-        TileType[,] res = new TileType[board.GetLength(0), board.GetLength(1)];
+        TileType[,] res = new TileType[board.GetLength(1), board.GetLength(0)];
 
         for (int x = 0; x < board.GetLength(0); x++)
         {
             for (int y = 0; y < board.GetLength(1); y++)
             {
-                res[x, y] = (TileType)board[x, y];
+                res[x, y] = (TileType)board[y, x];
             }
         }
         return res;
