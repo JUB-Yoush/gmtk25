@@ -135,6 +135,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 }
             }
         }
+        //who would ever write something this afwul
         GlobalGameState.resetPressed =
             Raylib.CheckCollisionRecs(Draw.ResetHitbox, mouseUiHitbox)
             && Raylib.IsMouseButtonPressed(MouseButton.Left);
@@ -146,8 +147,6 @@ public class Puzzle(TileType[,] board, Vec2i size)
         GlobalGameState.solvePressed =
             Raylib.CheckCollisionRecs(Draw.SolveHitbox, mouseUiHitbox)
             && Raylib.IsMouseButtonPressed(MouseButton.Left);
-
-        Console.WriteLine(GlobalGameState.resetPressed);
 
         GlobalGameState.changingPuzzle = GlobalGameState.solvePressed && g.solved;
 

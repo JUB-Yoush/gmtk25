@@ -128,11 +128,11 @@ public static class Draw
                 }
             }
         }
-        foreach (var pos in g.route)
-        {
-            Vec2i position = Puzzle.GRID_START_POS + new Vec2i(pos.X * gap, pos.Y * gap);
-            Raylib.DrawRectangle(position.X, position.Y, 8, 8, Color.Pink);
-        }
+        // foreach (var pos in g.route)
+        // {
+        //     Vec2i position = Puzzle.GRID_START_POS + new Vec2i(pos.X * gap, pos.Y * gap);
+        //     Raylib.DrawRectangle(position.X, position.Y, 8, 8, Color.Pink);
+        // }
 
         Raylib.DrawRectangle((int)g.mouseHitbox.X - 4, (int)g.mouseHitbox.Y - 4, 8, 8, Color.Green);
         if (g.solved)
