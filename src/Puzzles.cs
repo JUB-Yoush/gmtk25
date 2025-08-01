@@ -54,13 +54,17 @@ public class MoveBtn(RowOrCol type, int dir, int index)
 
 public class Puzzle(TileType[,] board, Vec2i size)
 {
-    public static readonly Vec2i GRID_START_POS = new(100, 100);
-    public static int TILESIZE = 24 * 2;
-    public static int TILEGAP = 26 * 2;
-    public static readonly Vec2i BTN_START_POS = new(
-        GRID_START_POS.X - TILESIZE,
-        GRID_START_POS.Y - TILESIZE
+    public static Vec2i GRID_START_POS = new(138, 130);
+    public static int TILESIZE = 47;
+    public static int TILEGAP = 49;
+    public static int BUTTONGAP = 49;
+    public static int BUTTONGAPREAL = 10;
+    public static Vec2i BTN_START_POS = new(
+        GRID_START_POS.X - BUTTONGAP,
+        GRID_START_POS.Y - BUTTONGAP
     );
+
+    public Stack<MoveBtn> undoStack = [];
 
     public Vec2i puzzleSize = size;
     public TileType[,] board = board;
@@ -73,28 +77,34 @@ public class Puzzle(TileType[,] board, Vec2i size)
     {
         Dictionary<Rectangle, MoveBtn> res = new();
 
-        int gap = TILEGAP;
+        BTN_START_POS = new(GRID_START_POS.X - BUTTONGAP, GRID_START_POS.Y - BUTTONGAP);
+
+        int gap = BUTTONGAP;
         for (int x = 1; x < size.X + 1; x++)
         {
             Vec2i position = BTN_START_POS + new Vec2i(x * gap, 0);
+            position.Y -= BUTTONGAPREAL;
             res.Add(new(position.toVec2(), TILESIZE, TILESIZE), new(RowOrCol.COL, -1, x - 1));
         }
 
         for (int x = 1; x < size.X + 1; x++)
         {
             Vec2i position = BTN_START_POS + new Vec2i(x * gap, (size.Y + 1) * gap);
+            position.Y += BUTTONGAPREAL;
             res.Add(new(position.toVec2(), TILESIZE, TILESIZE), new(RowOrCol.COL, 1, x - 1));
         }
 
         for (int y = 1; y < size.Y + 1; y++)
         {
             Vec2i position = BTN_START_POS + new Vec2i(0, y * gap);
+            position.X -= BUTTONGAPREAL;
             res.Add(new(position.toVec2(), TILESIZE, TILESIZE), new(RowOrCol.ROW, -1, y - 1));
         }
 
         for (int y = 1; y < size.Y + 1; y++)
         {
             Vec2i position = BTN_START_POS + new Vec2i((size.X + 1) * gap, y * gap);
+            position.X += BUTTONGAPREAL;
             res.Add(new(position.toVec2(), TILESIZE, TILESIZE), new(RowOrCol.ROW, 1, y - 1));
         }
 
@@ -103,14 +113,19 @@ public class Puzzle(TileType[,] board, Vec2i size)
 
     public static void Update(Puzzle g)
     {
+        Raylib.SetMouseScale(1 / Draw.vScale, 1 / Draw.vScale);
         Vec2 mousePos = Raylib.GetMousePosition();
+        Console.WriteLine(mousePos);
         g.mouseHitbox.X = mousePos.X + TILESIZE / 2;
         g.mouseHitbox.Y = mousePos.Y + TILESIZE / 2;
+
+        Rectangle mouseUiHitbox = new(mousePos.X, mousePos.Y, 8, 8);
 
         g.solved = getCircuitStatus(g.board).circuit;
         g.route = getCircuitStatus(g.board).visited;
 
         MoveBtn? overlapping = null;
+
         if (Raylib.IsMouseButtonPressed(MouseButton.Left))
         {
             foreach (var btn in g.moveBtnMap)
@@ -119,9 +134,32 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 if (Raylib.CheckCollisionRecs(r, g.mouseHitbox))
                 {
                     overlapping = btn.Value;
+                    Console.WriteLine(overlapping);
                 }
             }
         }
+        //who would ever write something this afwul
+        GlobalGameState.resetPressed =
+            Raylib.CheckCollisionRecs(Draw.ResetHitbox, mouseUiHitbox)
+            && Raylib.IsMouseButtonPressed(MouseButton.Left);
+
+        GlobalGameState.undoPressed =
+            Raylib.CheckCollisionRecs(Draw.UndoHitbox, mouseUiHitbox)
+            && Raylib.IsMouseButtonPressed(MouseButton.Left);
+
+        GlobalGameState.solvePressed =
+            Raylib.CheckCollisionRecs(Draw.SolveHitbox, mouseUiHitbox)
+            && Raylib.IsMouseButtonPressed(MouseButton.Left);
+
+        GlobalGameState.changingPuzzle = GlobalGameState.solvePressed && g.solved;
+
+        GlobalGameState.reseting = GlobalGameState.resetPressed;
+
+        if (GlobalGameState.undoPressed)
+        {
+            UndoSlide(g);
+        }
+
         if (overlapping == null)
         {
             return;
@@ -129,8 +167,24 @@ public class Puzzle(TileType[,] board, Vec2i size)
         Slide(g, overlapping);
     }
 
-    public static void Slide(Puzzle g, MoveBtn overlapping)
+    public static void UndoSlide(Puzzle g)
     {
+        if (g.undoStack.Count == 0)
+        {
+            return;
+        }
+        MoveBtn lastMove = g.undoStack.Pop();
+        MoveBtn oppositeBtn = new(lastMove.type, lastMove.dir * -1, lastMove.index);
+        Slide(g, oppositeBtn, true);
+    }
+
+    public static void Slide(Puzzle g, MoveBtn overlapping, bool undoing = false)
+    {
+        if (!undoing)
+        {
+            g.undoStack.Push(overlapping);
+        }
+
         Vec2i size = g.puzzleSize;
 
         if (overlapping.type == RowOrCol.ROW && overlapping.dir == 1)

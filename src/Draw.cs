@@ -1,5 +1,6 @@
 using System.Data.Common;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using Helper;
 using Puzzles;
@@ -7,10 +8,44 @@ using Raylib_cs;
 
 public static class Draw
 {
+    public static RenderTexture2D renderTarget;
+    public const int V_SCREEN_X = 720;
+    public const int V_SCREEN_Y = 512;
+
+    public static float vScale = 2;
+    public static int screenWidth = V_SCREEN_X * (int)vScale;
+    public static int screenHeight = V_SCREEN_Y * (int)vScale;
+
+    public static Rectangle sourceRec;
+    public static Rectangle destRec;
+
+    public static void SetupRenderer()
+    {
+        renderTarget = Raylib.LoadRenderTexture(V_SCREEN_X, V_SCREEN_Y);
+        sourceRec = new(0, 0, renderTarget.Texture.Width, -renderTarget.Texture.Height);
+        destRec = new(-vScale, -vScale, screenWidth + (vScale * 2), screenHeight + (vScale * 2));
+    }
+
+    /*
+     * misc rendering issues
+     * figure out how to scale tiles or make border npatch or just make it blank
+     * render static elements
+     * set up puzzle ui buttons (reset,undo)
+     * vn stuff?
+     * render buttons as images to get hover working
+     * set up virtual screen size
+     */
     public static readonly Dictionary<string, string> texturePaths = new()
     {
-        { "puzzleTiles", "./assets/images/tiles.png" },
+        { "puzzleTiles", "./assets/images/hiresTiles.png" },
+        { "gameScreen", "./assets/images/gameScreen.png" },
+        { "talkFrame", "./assets/images/TalkFrame.png" },
+        { "icons", "./assets/images/icons.png" },
     };
+
+    public static Rectangle SolveHitbox = new(530, 403, 147, 65);
+    public static Rectangle UndoHitbox = new(620, 256, 58, 107);
+    public static Rectangle ResetHitbox = new(527, 255, 58, 107);
 
     public static Dictionary<string, Texture2D> textures = [];
 
@@ -27,15 +62,21 @@ public static class Draw
         }
     }
 
-    public static void DrawFrame(Puzzle g)
+    public static void DrawPuzzleBg()
+    {
+        Raylib.DrawTexture(GetTexture("gameScreen"), 0, 0, Color.White);
+    }
+
+    public static void DrawVNBg()
+    {
+        Raylib.DrawTexture(GetTexture("talkFrame"), 0, 0, Color.White);
+    }
+
+    public static void DrawPuzzle(Puzzle g)
     {
         g.route = Puzzle.getCircuitStatus(g.board).visited;
         TileType[,] board = g.board;
         int gap = Puzzle.TILEGAP;
-        Raylib.BeginDrawing();
-
-        Raylib.ClearBackground(Color.White);
-
         foreach (var btn in g.moveBtnMap)
         {
             Rectangle r = btn.Key;
@@ -58,7 +99,7 @@ public static class Draw
                 rot = 270;
             }
 
-            DrawTile(new(r.X, r.Y), new(4, 0), rot);
+            DrawTile(new(r.X, r.Y), new(5, 0), rot);
         }
 
         for (int x = 0; x < board.GetLength(0); x++)
@@ -69,28 +110,28 @@ public static class Draw
                 switch (board[x, y])
                 {
                     case TileType.EMPTY:
-                        DrawTile(position, new(3, 1));
+                        DrawTile(position, new(5, 1));
                         break;
                     case TileType.WIRE_UD:
-                        DrawTile(position, getUV(x, y, new(0, 1), g.route));
+                        DrawTile(position, getUV(x, y, new(3, 0), g.route));
                         break;
                     case TileType.WIRE_LR:
-                        DrawTile(position, getUV(x, y, new(0, 1), g.route), 90);
+                        DrawTile(position, getUV(x, y, new(3, 0), g.route), 90);
                         break;
                     case TileType.WIRE_LD:
-                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 0);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 0);
                         break;
                     case TileType.WIRE_LU:
-                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 90);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 90);
                         break;
                     case TileType.WIRE_RU:
-                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 180);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 180);
                         break;
                     case TileType.WIRE_RD:
-                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 270);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 270);
                         break;
                     case TileType.NODE:
-                        DrawTile(position, getUV(x, y, new(2, 0), g.route));
+                        DrawTile(position, getUV(x, y, new(4, 0), g.route));
                         break;
                     case TileType.POSITIVE:
                         DrawTile(position, new(1, 0));
@@ -99,19 +140,19 @@ public static class Draw
                         DrawTile(position, new(0, 0));
                         break;
                     case TileType.BOX:
-                        DrawTile(position, new(3, 0));
+                        DrawTile(position, new(6, 0));
                         break;
                     case TileType.ROCK:
-                        DrawTile(position, new(2, 2));
+                        DrawTile(position, new(5, 1));
                         break;
                 }
             }
         }
-        foreach (var pos in g.route)
-        {
-            Vec2i position = Puzzle.GRID_START_POS + new Vec2i(pos.X * gap, pos.Y * gap);
-            Raylib.DrawRectangle(position.X, position.Y, 8, 8, Color.Pink);
-        }
+        // foreach (var pos in g.route)
+        // {
+        //     Vec2i position = Puzzle.GRID_START_POS + new Vec2i(pos.X * gap, pos.Y * gap);
+        //     Raylib.DrawRectangle(position.X, position.Y, 8, 8, Color.Pink);
+        // }
 
         Raylib.DrawRectangle((int)g.mouseHitbox.X - 4, (int)g.mouseHitbox.Y - 4, 8, 8, Color.Green);
         if (g.solved)
@@ -119,7 +160,6 @@ public static class Draw
             Raylib.DrawText("solved", 10, 10, 20, Color.Black);
             Raylib.DrawText($"{g.route.Count}", 10, 30, 20, Color.Black);
         }
-        Raylib.EndDrawing();
     }
 
     public static Vec2 getUV(int x, int y, Vec2i uv, List<Vec2i> elecRoute)
@@ -163,5 +203,26 @@ public static class Draw
             rotation,
             Color.White
         );
+    }
+
+    public static void DrawFrame(Puzzle g)
+    {
+        Raylib.BeginTextureMode(renderTarget);
+        Raylib.ClearBackground(Color.Black);
+        switch (GlobalGameState.currentState)
+        {
+            case GameStates.GAME:
+                DrawPuzzleBg();
+                DrawPuzzle(g);
+                break;
+            case GameStates.INTRO:
+                DrawVNBg();
+                break;
+        }
+        Raylib.EndTextureMode();
+        Raylib.ClearBackground(Color.Black);
+        Raylib.BeginDrawing();
+        Raylib.DrawTexturePro(renderTarget.Texture, sourceRec, destRec, new(0, 0), 0, Color.White);
+        Raylib.EndDrawing();
     }
 }
