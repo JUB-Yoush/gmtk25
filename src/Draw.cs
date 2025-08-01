@@ -44,9 +44,14 @@ public static class Draw
         }
     }
 
-    public static void DrawBg()
+    public static void DrawPuzzleBg()
     {
         Raylib.DrawTexture(GetTexture("gameScreen"), 0, 0, Color.White);
+    }
+
+    public static void DrawVNBg()
+    {
+        Raylib.DrawTexture(GetTexture("talkFrame"), 0, 0, Color.White);
     }
 
     public static void DrawPuzzle(Puzzle g)
@@ -54,10 +59,6 @@ public static class Draw
         g.route = Puzzle.getCircuitStatus(g.board).visited;
         TileType[,] board = g.board;
         int gap = Puzzle.TILEGAP;
-        Raylib.BeginDrawing();
-
-        Raylib.ClearBackground(Color.Black);
-
         foreach (var btn in g.moveBtnMap)
         {
             Rectangle r = btn.Key;
@@ -141,7 +142,6 @@ public static class Draw
             Raylib.DrawText("solved", 10, 10, 20, Color.Black);
             Raylib.DrawText($"{g.route.Count}", 10, 30, 20, Color.Black);
         }
-        Raylib.EndDrawing();
     }
 
     public static Vec2 getUV(int x, int y, Vec2i uv, List<Vec2i> elecRoute)
@@ -189,12 +189,21 @@ public static class Draw
 
     public static void DrawFrame(Puzzle g)
     {
+        Raylib.BeginDrawing();
+
+        Raylib.ClearBackground(Color.Black);
+
         switch (GlobalGameState.currentState)
         {
             case GameStates.GAME:
-                DrawBg();
+                DrawPuzzleBg();
                 DrawPuzzle(g);
                 break;
+            case GameStates.INTRO:
+                DrawVNBg();
+                break;
         }
+
+        Raylib.EndDrawing();
     }
 }
