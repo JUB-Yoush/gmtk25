@@ -12,7 +12,7 @@ public static class Draw
     public const int V_SCREEN_X = 720;
     public const int V_SCREEN_Y = 512;
 
-    public static float vScale = 1;
+    public static float vScale = 2;
     public static int screenWidth = V_SCREEN_X * (int)vScale;
     public static int screenHeight = V_SCREEN_Y * (int)vScale;
 
