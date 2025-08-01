@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net9.0/gmtk25.dll",
+            "program": "${workspaceFolder}/bin/Debug/net9.0/linux-x64/gmtk25.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",

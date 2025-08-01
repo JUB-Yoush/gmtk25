@@ -30,6 +30,7 @@ public enum TileType
     POSITIVE,
     NEGATIVE,
     BOX,
+    DISABLED,
 }
 
 public enum RowOrCol
@@ -70,7 +71,6 @@ public class Puzzle(TileType[,] board, Vec2i size)
     public static Dictionary<Rectangle, MoveBtn> populateBtnMap(Vec2i size)
     {
         Dictionary<Rectangle, MoveBtn> res = new();
-        Console.WriteLine(size.ToString());
 
         int gap = TILEGAP;
         for (int x = 1; x < size.X + 1; x++)
@@ -115,7 +115,6 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 if (Raylib.CheckCollisionRecs(r, g.mouseHitbox))
                 {
                     overlapping = btn.Value;
-                    //Console.WriteLine(btn.Value.ToString());
                 }
             }
         }
@@ -191,23 +190,16 @@ public class Puzzle(TileType[,] board, Vec2i size)
         }
     }
 
-    public static int CanConnect(Vec2i t1Pos, Vec2i t2Pos, TileType[,] board)
+    public static int CanConnect(Vec2i t1Pos, Vec2i t2Pos, TileType[,] board, Direction checkDir)
     {
         TileType t1 = board[t1Pos.X, t1Pos.Y];
         TileType t2 = board[t2Pos.X, t2Pos.Y];
-        if (t1 == TileType.POSITIVE)
-        {
-            //Console.WriteLine("");
-        }
-        Direction checkDir = JLib.Vec2Dir(t2Pos - t1Pos);
         bool t1Good = getConnections(t1).Contains(checkDir);
         bool t2Good = getConnections(t2).Contains(JLib.InvertDir(checkDir));
         if (t1Good && t2Good)
         {
             return 1;
         }
-
-        //return getConnections(t1).Intersect(getConnections(t1)).ToArray().Length;
 
         return 0;
     }
@@ -232,13 +224,16 @@ public class Puzzle(TileType[,] board, Vec2i size)
             }
             foreach (Direction dir in getConnections(board[curr.X, curr.Y]))
             {
-                //Console.WriteLine(curr.X.ToString(), curr.Y.ToString());
                 Vec2i newDir = curr + dir;
+                bool wrapped = newDir == JLib.V2Wrap(newDir, new(0, 0), size);
+
+                //wrap around
+                newDir = JLib.V2Wrap(newDir, new(0, 0), size);
+
                 if (
-                    Vec2i.Clamp(newDir, new(0, 0), maxIndex) != newDir
-                    || board[newDir.X, newDir.Y] == TileType.EMPTY
+                    board[newDir.X, newDir.Y] == TileType.EMPTY
                     || board[newDir.X, newDir.Y] == TileType.BOX
-                    || CanConnect(curr, newDir, board) == 0
+                    || CanConnect(curr, newDir, board, dir) == 0
                     || visited.Contains(newDir)
                 )
                 {
@@ -306,21 +301,21 @@ public static class PuzzleLoader
 
     public static Puzzle LoadPuzzle()
     {
-        int[,] p1 =
-        {
-            { 8, 9, 0, 0, 0 },
-            { 3, 4, 1, 1, 0 },
-            { 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0 },
-        };
         int[,] p2 =
         {
-            { 8, 9, 0, 0, 0 },
-            { 3, 4, 1, 1, 0 },
-            { 0, 0, 7, 1, 0 },
-            { 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0 },
+            { 8, 2, 5, 0, 0 },
+            { 4, 5, 4, 5, 0 },
+            { 6, 4, 5, 4, 5 },
+            { 0, 0, 4, 5, 1 },
+            { 0, 0, 0, 4, 9 },
+        };
+        int[,] p1 =
+        {
+            { 0, 0, 10, 10, 0 },
+            { 5, 0, 10, 10, 8 },
+            { 0, 0, 10, 10, 9 },
+            { 0, 6, 10, 10, 0 },
+            { 0, 0, 10, 10, 0 },
         };
 
         int[,] p3 =
