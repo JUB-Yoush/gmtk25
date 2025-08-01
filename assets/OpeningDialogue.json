@@ -23,9 +23,15 @@
         },
         {
             "speaker": "mac",
-            "text": "We just passed through an asteroid belt.  Whatever was in it was highly acidic, and the ship ingested a lot.  We’re dealing with major structural imbalance, overheating engines, and—",
+            "text": "We just passed through an asteroid belt.  Whatever was in it was highly acidic, and the ship ingested a lot.",
             "emotion": "neutral"
         },
+        {
+            "speaker": "mac",
+            "text": "We’re dealing with major structural imbalance, overheating engines, and—",
+            "emotion": "neutral"
+        },
+    
         {
             "speaker": "astrid",
             "text": "So the ship has indigestion?",
@@ -53,8 +59,14 @@
         },
         {
             "speaker": "mac",
-            "text": "Stocks are good, but our switchboard is offline.  Rebooting will take more time than we have.  Let’s manually route the Galaxy-Bismol.  We’re on opposite ends of the ship, so we’ll need to connect with a stable link.",
+            "text": "Stocks are good, but our switchboard is offline.  Rebooting will take more time than we have.",
             "emotion": "neutral"
+        },
+        {
+            "speaker": "mac",
+            "text":"Let’s manually route the Galaxy-Bismol.  We’re on opposite ends of the ship, so we’ll need to connect with a stable link.",
+            "emotion": "neutral"
+
         },
         {
             "speaker": "astrid",
