@@ -8,6 +8,24 @@ using Raylib_cs;
 
 public static class Draw
 {
+    public static RenderTexture2D renderTarget;
+    public const int V_SCREEN_X = 720;
+    public const int V_SCREEN_Y = 512;
+
+    public static float vScale = 2;
+    public static int screenWidth = V_SCREEN_X * (int)vScale;
+    public static int screenHeight = V_SCREEN_Y * (int)vScale;
+
+    public static Rectangle sourceRec;
+    public static Rectangle destRec;
+
+    public static void SetupRenderer()
+    {
+        renderTarget = Raylib.LoadRenderTexture(V_SCREEN_X, V_SCREEN_Y);
+        sourceRec = new(0, 0, renderTarget.Texture.Width, -renderTarget.Texture.Height);
+        destRec = new(-vScale, -vScale, screenWidth + (vScale * 2), screenHeight + (vScale * 2));
+    }
+
     /*
      * misc rendering issues
      * figure out how to scale tiles or make border npatch or just make it blank
@@ -54,10 +72,6 @@ public static class Draw
         g.route = Puzzle.getCircuitStatus(g.board).visited;
         TileType[,] board = g.board;
         int gap = Puzzle.TILEGAP;
-        Raylib.BeginDrawing();
-
-        Raylib.ClearBackground(Color.Black);
-
         foreach (var btn in g.moveBtnMap)
         {
             Rectangle r = btn.Key;
@@ -141,7 +155,6 @@ public static class Draw
             Raylib.DrawText("solved", 10, 10, 20, Color.Black);
             Raylib.DrawText($"{g.route.Count}", 10, 30, 20, Color.Black);
         }
-        Raylib.EndDrawing();
     }
 
     public static Vec2 getUV(int x, int y, Vec2i uv, List<Vec2i> elecRoute)
@@ -189,6 +202,8 @@ public static class Draw
 
     public static void DrawFrame(Puzzle g)
     {
+        Raylib.BeginTextureMode(renderTarget);
+        Raylib.ClearBackground(Color.Black);
         switch (GlobalGameState.currentState)
         {
             case GameStates.GAME:
@@ -196,5 +211,10 @@ public static class Draw
                 DrawPuzzle(g);
                 break;
         }
+        Raylib.EndTextureMode();
+        Raylib.ClearBackground(Color.Black);
+        Raylib.BeginDrawing();
+        Raylib.DrawTexturePro(renderTarget.Texture, sourceRec, destRec, new(0, 0), 0, Color.White);
+        Raylib.EndDrawing();
     }
 }
