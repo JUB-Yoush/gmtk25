@@ -13,21 +13,25 @@ namespace Gmtk;
 
 class Program
 {
+
     public static void Main()
     {
         Raylib.InitWindow(720, 512, "Hello World");
         Raylib.SetTargetFPS(60);
 
-        GlobalGameState.currentState = GameStates.GAME; //BUGTEST: Set global var
+        GlobalGameState.currentState = GameStates.TITLE;//BUGTEST: Set global var
 
         Puzzle g = PuzzleLoader.LoadPuzzle();
         Draw.LoadTextures();
+      
 
         while (!Raylib.WindowShouldClose())
         {
+
             switch (GlobalGameState.currentState)
             {
                 case GameStates.TITLE:
+
                     break;
                 case GameStates.INTRO:
                     break;
@@ -45,11 +49,16 @@ class Program
                         g = PuzzleLoader.LoadPuzzle();
                     }
 
+
                     break;
                 case GameStates.OUTRO:
                     break;
             }
+
+
+
         }
+
 
         Raylib.CloseWindow();
     }
