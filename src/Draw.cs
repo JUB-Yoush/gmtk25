@@ -12,15 +12,6 @@ public static class Draw
         { "puzzleTiles", "./assets/images/tiles.png" },
     };
 
-    // public static readonly Dictionary<TileType, Vec2> uvMap = new Dictionary<TileType, Vec2>()
-    // {
-    //     { TileType.EMPTY, new(1, 3) },
-    //     { TileType.POSITIVE, new(0, 1) },
-    //     { TileType.NEGATIVE, new(0, 1) },
-    //     { TileType.NODE, new(1, 3) },
-    //     { TileType.NODE, new(1, 3) },
-    // };
-
     public static Dictionary<string, Texture2D> textures = [];
 
     public static Texture2D GetTexture(string id)
@@ -135,39 +126,6 @@ public static class Draw
             return (uv + Direction.DOWN).toVec2();
         }
         return uv;
-        // if (board[x, y] == TileType.NODE)
-        // {
-        //     if (elecRoute.Contains(new(x, y)))
-        //     {
-        //         return new(2, 1);
-        //     }
-        //     else
-        //     {
-        //         return new(2, 0);
-        //     }
-        // }
-        // if (board[x, y] == TileType.WIRE_LR || board[x, y] == TileType.WIRE_UD)
-        // {
-        //     if (elecRoute.Contains(new(x, y)))
-        //     {
-        //         return new(0, 1);
-        //     }
-        //     else
-        //     {
-        //         return new(0, 2);
-        //     }
-        // }
-        // if (
-        //     (
-        //         board[x, y] == TileType.WIRE_LD
-        //         || board[x, y] == TileType.WIRE_LU
-        //         || board[x, y] == TileType.WIRE_RD
-        //         || board[x, y] == TileType.WIRE_RU
-        //     ) && elecRoute.Contains(new(x, y))
-        // )
-        // {
-        //     return new(1, 2);
-        // }
     }
 
     public static void DrawTile(

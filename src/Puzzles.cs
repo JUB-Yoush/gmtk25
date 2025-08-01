@@ -207,8 +207,6 @@ public class Puzzle(TileType[,] board, Vec2i size)
             return 1;
         }
 
-        //return getConnections(t1).Intersect(getConnections(t1)).ToArray().Length;
-
         return 0;
     }
 
