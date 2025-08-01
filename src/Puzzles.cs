@@ -133,6 +133,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 if (Raylib.CheckCollisionRecs(r, g.mouseHitbox))
                 {
                     overlapping = btn.Value;
+                    Console.WriteLine(overlapping);
                 }
             }
         }
