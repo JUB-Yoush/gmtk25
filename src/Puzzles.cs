@@ -31,6 +31,7 @@ public enum TileType
     NEGATIVE,
     BOX,
     DISABLED,
+    ROCK,
 }
 
 public enum RowOrCol
@@ -106,6 +107,9 @@ public class Puzzle(TileType[,] board, Vec2i size)
         g.mouseHitbox.X = mousePos.X + TILESIZE / 2;
         g.mouseHitbox.Y = mousePos.Y + TILESIZE / 2;
 
+        g.solved = getCircuitStatus(g.board).circuit;
+        g.route = getCircuitStatus(g.board).visited;
+
         MoveBtn? overlapping = null;
         if (Raylib.IsMouseButtonPressed(MouseButton.Left))
         {
@@ -118,16 +122,17 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 }
             }
         }
-        g.solved = getCircuitStatus(g.board).circuit;
-        g.route = getCircuitStatus(g.board).visited;
         if (overlapping == null)
         {
             return;
         }
+        Slide(g, overlapping);
+    }
+
+    public static void Slide(Puzzle g, MoveBtn overlapping)
+    {
         Vec2i size = g.puzzleSize;
 
-        // get relevant row or column
-        // shift all values around (wrap first and last)
         if (overlapping.type == RowOrCol.ROW && overlapping.dir == 1)
         {
             if (g.board[size.X - 1, overlapping.index] == TileType.BOX)
@@ -136,7 +141,6 @@ public class Puzzle(TileType[,] board, Vec2i size)
             }
             //shift right
             TileType[] row = JLib.GetRow(g.board, overlapping.index);
-            //int last = g.board[3, overlapping.index];
             for (int x = 1; x < size.X; x++)
             {
                 g.board[x, overlapping.index] = row[x - 1];
@@ -151,7 +155,6 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 return;
             }
             TileType[] row = JLib.GetRow(g.board, overlapping.index);
-            //int last = g.board[3, overlapping.index];
             for (int x = 0; x < size.X - 1; x++)
             {
                 g.board[x, overlapping.index] = row[x + 1];
@@ -166,7 +169,6 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 return;
             }
             TileType[] col = JLib.GetCol(g.board, overlapping.index);
-            //int last = g.board[3, overlapping.index];
             for (int y = 1; y < size.Y; y++)
             {
                 g.board[overlapping.index, y] = col[y - 1];
@@ -181,7 +183,6 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 return;
             }
             TileType[] col = JLib.GetCol(g.board, overlapping.index);
-            //int last = g.board[3, overlapping.index];
             for (int y = 0; y < size.Y - 1; y++)
             {
                 g.board[overlapping.index, y] = col[y + 1];
@@ -233,6 +234,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 if (
                     board[newDir.X, newDir.Y] == TileType.EMPTY
                     || board[newDir.X, newDir.Y] == TileType.BOX
+                    || board[newDir.X, newDir.Y] == TileType.ROCK
                     || CanConnect(curr, newDir, board, dir) == 0
                     || visited.Contains(newDir)
                 )
@@ -311,11 +313,11 @@ public static class PuzzleLoader
         };
         int[,] p1 =
         {
-            { 0, 0, 10, 10, 0 },
-            { 5, 0, 10, 10, 8 },
-            { 0, 0, 10, 10, 9 },
-            { 0, 6, 10, 10, 0 },
-            { 0, 0, 10, 10, 0 },
+            { 10, 10, 0, 10, 10 },
+            { 5, 0, 0, 0, 8 },
+            { 0, 0, 0, 0, 9 },
+            { 0, 6, 0, 0, 0 },
+            { 10, 10, 0, 10, 10 },
         };
 
         int[,] p3 =

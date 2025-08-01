@@ -101,6 +101,9 @@ public static class Draw
                     case TileType.BOX:
                         DrawTile(position, new(3, 0));
                         break;
+                    case TileType.ROCK:
+                        DrawTile(position, new(2, 2));
+                        break;
                 }
             }
         }
