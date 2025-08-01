@@ -7,12 +7,13 @@ class Program
 {
     public static void Main()
     {
-        Raylib.InitWindow(720, 512, "Hello World");
+        Raylib.InitWindow(Draw.screenWidth, Draw.screenHeight, "Hello World");
         Raylib.SetTargetFPS(60);
 
         GlobalGameState.currentState = GameStates.INTRO; //BUGTEST: Set global var
 
         Puzzle g = PuzzleLoader.LoadPuzzle();
+        Draw.SetupRenderer();
         Draw.LoadTextures();
 
         while (!Raylib.WindowShouldClose())
