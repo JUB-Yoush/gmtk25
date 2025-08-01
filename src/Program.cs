@@ -13,7 +13,7 @@ class Program
         Raylib.SetTargetFPS(60);
 
         GlobalGameState.currentState = GameStates.TITLE;//BUGTEST: Set global var
-        GlobalGameState.currentState = GameStates.INTRO; //BUGTEST: Set global var
+        
 
         Puzzle g = PuzzleLoader.LoadPuzzle();
         Draw.SetupRenderer();
