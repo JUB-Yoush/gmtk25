@@ -1,12 +1,4 @@
-﻿using System.Data;
-using System.Diagnostics;
-using System.Dynamic;
-using System.Net.Mail;
-using System.Numerics;
-using System.Reflection.Metadata;
-using System.Security.Cryptography.X509Certificates;
-using Helper;
-using Puzzles;
+﻿using Puzzles;
 using Raylib_cs;
 
 namespace Gmtk;
@@ -35,14 +27,16 @@ class Program
 
                     Puzzle.Update(g);
                     Draw.DrawFrame(g);
-                    if (Raylib.IsKeyPressed(KeyboardKey.R))
+                    if (Raylib.IsKeyPressed(KeyboardKey.R) || GlobalGameState.reseting)
                     {
                         g = PuzzleLoader.LoadPuzzle();
+                        GlobalGameState.reseting = false;
                     }
-                    if (Raylib.IsKeyPressed(KeyboardKey.One))
+                    if (Raylib.IsKeyPressed(KeyboardKey.One) || GlobalGameState.changingPuzzle)
                     {
                         PuzzleLoader.puzzleIndex++;
                         g = PuzzleLoader.LoadPuzzle();
+                        GlobalGameState.changingPuzzle = false;
                     }
 
                     break;

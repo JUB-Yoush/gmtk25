@@ -1,5 +1,6 @@
 using System.Data.Common;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using Helper;
 using Puzzles;
@@ -7,10 +8,25 @@ using Raylib_cs;
 
 public static class Draw
 {
+    /*
+     * misc rendering issues
+     * figure out how to scale tiles or make border npatch or just make it blank
+     * render static elements
+     * set up puzzle ui buttons (reset,undo)
+     * vn stuff?
+     * set up virtual screen size
+     */
     public static readonly Dictionary<string, string> texturePaths = new()
     {
-        { "puzzleTiles", "./assets/images/tiles.png" },
+        { "puzzleTiles", "./assets/images/hiresTiles.png" },
+        { "gameScreen", "./assets/images/gameScreen.png" },
+        { "talkFrame", "./assets/images/TalkFrame.png" },
+        { "icons", "./assets/images/icons.png" },
     };
+
+    public static Rectangle SolveHitbox = new(530, 403, 147, 65);
+    public static Rectangle UndoHitbox = new(620, 256, 58, 107);
+    public static Rectangle ResetHitbox = new(527, 255, 58, 107);
 
     public static Dictionary<string, Texture2D> textures = [];
 
@@ -27,14 +43,19 @@ public static class Draw
         }
     }
 
-    public static void DrawFrame(Puzzle g)
+    public static void DrawBg()
+    {
+        Raylib.DrawTexture(GetTexture("gameScreen"), 0, 0, Color.White);
+    }
+
+    public static void DrawPuzzle(Puzzle g)
     {
         g.route = Puzzle.getCircuitStatus(g.board).visited;
         TileType[,] board = g.board;
         int gap = Puzzle.TILEGAP;
         Raylib.BeginDrawing();
 
-        Raylib.ClearBackground(Color.White);
+        Raylib.ClearBackground(Color.Black);
 
         foreach (var btn in g.moveBtnMap)
         {
@@ -58,7 +79,7 @@ public static class Draw
                 rot = 270;
             }
 
-            DrawTile(new(r.X, r.Y), new(4, 0), rot);
+            DrawTile(new(r.X, r.Y), new(5, 0), rot);
         }
 
         for (int x = 0; x < board.GetLength(0); x++)
@@ -69,28 +90,28 @@ public static class Draw
                 switch (board[x, y])
                 {
                     case TileType.EMPTY:
-                        DrawTile(position, new(3, 1));
+                        DrawTile(position, new(5, 1));
                         break;
                     case TileType.WIRE_UD:
-                        DrawTile(position, getUV(x, y, new(0, 1), g.route));
+                        DrawTile(position, getUV(x, y, new(3, 0), g.route));
                         break;
                     case TileType.WIRE_LR:
-                        DrawTile(position, getUV(x, y, new(0, 1), g.route), 90);
+                        DrawTile(position, getUV(x, y, new(3, 0), g.route), 90);
                         break;
                     case TileType.WIRE_LD:
-                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 0);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 0);
                         break;
                     case TileType.WIRE_LU:
-                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 90);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 90);
                         break;
                     case TileType.WIRE_RU:
-                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 180);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 180);
                         break;
                     case TileType.WIRE_RD:
-                        DrawTile(position, getUV(x, y, new(1, 1), g.route), 270);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 270);
                         break;
                     case TileType.NODE:
-                        DrawTile(position, getUV(x, y, new(2, 0), g.route));
+                        DrawTile(position, getUV(x, y, new(4, 0), g.route));
                         break;
                     case TileType.POSITIVE:
                         DrawTile(position, new(1, 0));
@@ -99,10 +120,10 @@ public static class Draw
                         DrawTile(position, new(0, 0));
                         break;
                     case TileType.BOX:
-                        DrawTile(position, new(3, 0));
+                        DrawTile(position, new(6, 0));
                         break;
                     case TileType.ROCK:
-                        DrawTile(position, new(2, 2));
+                        DrawTile(position, new(5, 1));
                         break;
                 }
             }
@@ -163,5 +184,16 @@ public static class Draw
             rotation,
             Color.White
         );
+    }
+
+    public static void DrawFrame(Puzzle g)
+    {
+        switch (GlobalGameState.currentState)
+        {
+            case GameStates.GAME:
+                DrawBg();
+                DrawPuzzle(g);
+                break;
+        }
     }
 }
