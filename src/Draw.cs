@@ -14,6 +14,7 @@ public static class Draw
      * render static elements
      * set up puzzle ui buttons (reset,undo)
      * vn stuff?
+     * render buttons as images to get hover working
      * set up virtual screen size
      */
     public static readonly Dictionary<string, string> texturePaths = new()
