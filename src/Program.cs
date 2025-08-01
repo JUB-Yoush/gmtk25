@@ -13,14 +13,12 @@ namespace Gmtk;
 
 class Program
 {
-    public static readonly Vec2i GRID_START_POS = new(100, 100);
-    public static readonly Vec2i BTN_START_POS = new(100 - 24, 100 - 24);
-
     public static void Main()
     {
-        Raylib.InitWindow(800, 480, "Hello World");
+        Raylib.InitWindow(720, 512, "Hello World");
         Raylib.SetTargetFPS(60);
         Puzzle g = PuzzleLoader.LoadPuzzle();
+        Draw.LoadTextures();
 
         while (!Raylib.WindowShouldClose())
         {
@@ -28,6 +26,11 @@ class Program
             Draw.DrawFrame(g);
             if (Raylib.IsKeyPressed(KeyboardKey.R))
             {
+                g = PuzzleLoader.LoadPuzzle();
+            }
+            if (Raylib.IsKeyPressed(KeyboardKey.One))
+            {
+                PuzzleLoader.puzzleIndex++;
                 g = PuzzleLoader.LoadPuzzle();
             }
         }
