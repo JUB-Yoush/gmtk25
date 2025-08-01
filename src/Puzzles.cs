@@ -114,6 +114,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
     public static void Update(Puzzle g)
     {
         Vec2 mousePos = Raylib.GetMousePosition();
+        //Console.WriteLine(mousePos.ToString());
         g.mouseHitbox.X = mousePos.X + TILESIZE / 2;
         g.mouseHitbox.Y = mousePos.Y + TILESIZE / 2;
 
