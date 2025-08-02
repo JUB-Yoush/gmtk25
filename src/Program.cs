@@ -19,7 +19,7 @@ class Program
         AudioManager.LoadAudio();
         Draw.SetupRenderer();
         Draw.LoadTextures();
-        AudioManager.playBGM("intro");
+        //AudioManager.playBGM("intro");
 
         while (!Raylib.WindowShouldClose())
         {

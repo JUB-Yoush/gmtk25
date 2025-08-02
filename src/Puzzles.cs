@@ -64,6 +64,17 @@ public class Puzzle(TileType[,] board, Vec2i size)
         GRID_START_POS.Y - BUTTONGAP
     );
 
+    public static Rectangle CurrentFaceRect = new(0, 0, Draw.FACE_SIZE.X, Draw.FACE_SIZE.Y);
+    public static float faceTimer = 5;
+
+    public static void ChangeFace()
+    {
+        Random rng = new();
+        CurrentFaceRect.X = rng.Next(0, 2) * Draw.FACE_SIZE.X;
+        CurrentFaceRect.Y = rng.Next(0, 5) * Draw.FACE_SIZE.Y;
+        faceTimer = 5;
+    }
+
     public Stack<MoveBtn> undoStack = [];
 
     public Vec2i puzzleSize = size;

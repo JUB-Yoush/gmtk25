@@ -260,10 +260,16 @@ public static class Draw
     {
         Raylib.DrawTextureRec(
             GetTexture("girls"),
-            new Rectangle(3 * FACE_SIZE.X, 0, FACE_SIZE.X, FACE_SIZE.Y),
+            Puzzle.CurrentFaceRect,
             new Vec2(532, 202 - 125),
             Color.White
         );
+
+        Puzzle.faceTimer -= Raylib.GetFrameTime();
+        if (Puzzle.faceTimer <= 0)
+        {
+            Puzzle.ChangeFace();
+        }
     }
 
     public static void DrawTitleScreen()
@@ -282,7 +288,6 @@ public static class Draw
     {
         Raylib.BeginTextureMode(renderTarget);
         Raylib.ClearBackground(Color.Black);
-        Console.WriteLine(GlobalGameState.currentState);
         switch (GlobalGameState.currentState)
         {
             case GameStates.TITLE:
