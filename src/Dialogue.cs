@@ -77,8 +77,13 @@ public static class DialogueHandler
         hoverOnArrow = Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox);
 
         if (hoverOnArrow && Raylib.IsMouseButtonPressed(MouseButton.Left))
-        {  
-            GlobalGameState.IncrementDI();   
+        {
+            GlobalGameState.IncrementDI();
+            if (GlobalGameState.dialogueIndex == 17)
+            {
+                GlobalGameState.currentState = GameStates.GAME;
+            }
+            
         }
 
         //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
@@ -104,7 +109,7 @@ public static class DialogueHandler
             );
         }
         
-
+        
 
     }
 
@@ -116,45 +121,34 @@ public static class DialogueHandler
 
         char[] seperators = new char[] { ' ', '.', ',', '!', '?', ';', ':', '—'};
 
-        int index = 0;
-          String line = "";
+        
+        String line = "";
+       
 
+        //the dialogue is already short to fit, pass it out of the function
         if (dialogue.Length <= maxLineChar)
         {
             cutDialogue.Add(dialogue);
             return cutDialogue;
-          }
-     
-      while (index < dialogue.Length)
+        }
+
+        for (int currChar = 0; currChar < dialogue.Length; currChar++)
         {
-
-
-
-            if ((index + maxLineChar) >= dialogue.Length)
-            {
-                line = dialogue.Substring(index);
-            }
-            else
+            line += dialogue[currChar];
+            
+            if (currChar > 0 && currChar % maxLineChar == 0)
             {
 
-                line = dialogue.Substring(index, index + maxLineChar); //cut up to 30~ characters
-
-                char lastChar = line[line.Length - 1];
-
-                //if it is a letter, we need to add a hyphen
-                if (!seperators.Contains(lastChar))
+                if (!seperators.Contains(dialogue[currChar]))
                 {
                     line += "-"; //hyphenate if we are cut in the middle of a sentence
                 }
 
-
+                cutDialogue.Add(line);
+                line = "";
             }
-            index += maxLineChar;
-            Console.WriteLine(line);
-            cutDialogue.Add(line);
-        }
-           
-
+       }
+      
         return cutDialogue;
     }
 
