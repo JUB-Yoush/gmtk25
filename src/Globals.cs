@@ -1,6 +1,7 @@
 global using Vec2 = System.Numerics.Vector2;
 global using Vec2i = Helper.Vec2i;
 using System.Globalization; //(.Y.) jasmine is listening
+using System.Security.Cryptography.X509Certificates;
 using DialogueParser;
 public enum GameStates
 {
@@ -35,6 +36,16 @@ public static class GlobalGameState
         if (dialogueIndex < dialogue.Count)
         {
             dialogueIndex++;
+        
+       
+      
+            
+        }
+    
+    }
+
+    public static void UpdateSpeaker()
+    {
             string whoTalking = dialogue[dialogueIndex].speaker.ToString();
             switch (whoTalking)
             {
@@ -44,9 +55,12 @@ public static class GlobalGameState
                 case "Astrid":
                     currSpeaker = CurrentSpeaker.ASTRID;
                     break;
-            }
-      
-            string whatEmotion = dialogue[dialogueIndex].emotion.ToString();
+            } 
+    }
+
+    public static void UpdateEmotion()
+    {
+        string whatEmotion = dialogue[dialogueIndex].emotion.ToString();
             switch (whatEmotion)
             {
                 case "happy":
@@ -62,8 +76,6 @@ public static class GlobalGameState
                     currEmotion = SpeakerEmotion.NEUTRAL;
                     break;
             }
-        }
-
     }
     public static SpeakerEmotion currEmotion = SpeakerEmotion.ANGRY;
     public static CurrentSpeaker currSpeaker = CurrentSpeaker.MAC;

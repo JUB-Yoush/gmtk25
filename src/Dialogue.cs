@@ -65,6 +65,8 @@ public static class DialogueHandler
     public static int speakerPosY = 60;
     public static int speakerPosX = 145;
 
+    public static bool canDrawText = true;
+
     public static readonly Rectangle StartBtnBox = new(
         arrowBoxX,
         arrowBoxY,
@@ -76,20 +78,32 @@ public static class DialogueHandler
     {
         Vec2 mousePos = Raylib.GetMousePosition();
         Rectangle mouseHbox = new(mousePos.X, mousePos.Y, 4, 4);
-
+       
 
         hoverOnArrow = Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox);
-        
+
         if (hoverOnArrow && Raylib.IsMouseButtonPressed(MouseButton.Left))
         {
             GlobalGameState.IncrementDI();
-            if (GlobalGameState.dialogueIndex == 17)
+             canDrawText = GlobalGameState.dialogueIndex < GlobalGameState.dialogue.Count;
+            if (GlobalGameState.dialogueIndex == 18)
             {
                 GlobalGameState.currentState = GameStates.GAME;
             }
+            else
+            {
+                if (canDrawText)
+                {
+                    GlobalGameState.UpdateEmotion();
+                    GlobalGameState.UpdateSpeaker();
+                }
+
+            }
         }
 
-        //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
+        if (canDrawText)
+        {
+          //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
         Raylib.DrawText(
             GlobalGameState.dialogue[GlobalGameState.dialogueIndex].speaker,
             textPosX,
@@ -112,6 +126,8 @@ public static class DialogueHandler
                 Draw.textCol
             );
         }
+    }
+      
     }
 
     public static List<String> CutDialogue(String dialogue)
