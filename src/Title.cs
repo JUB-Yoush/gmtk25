@@ -8,7 +8,6 @@ using Raylib_cs;
 //Namespace -- break up code so it can be easier to understand and maintain within itself
 //avoid conflicts w/ names in our code
 
-<<<<<<< HEAD
 public static class TitleHandler
 {
     public static readonly Rectangle StartBtnBox = new(244, 301, 272, 112);
@@ -26,13 +25,3 @@ public static class TitleHandler
         }
     }
 }
-=======
-namespace Title;
-
-public class DrawTitle()
-{
-    static Image frame = Raylib.LoadImage("./assets/images/TalkFrame.png");
-    Texture2D frameTex = Raylib.LoadTextureFromImage(frame);
-    
-}
->>>>>>> Dialogue
