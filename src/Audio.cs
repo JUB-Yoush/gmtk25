@@ -67,5 +67,12 @@ public static class AudioManager
     public static void update()
     {
         Raylib.UpdateMusicStream(CurrentBGM);
+        float timePlayed =
+            Raylib.GetMusicTimePlayed(CurrentBGM) / Raylib.GetMusicTimeLength(CurrentBGM);
+        if (timePlayed >= 1)
+        {
+            Raylib.StopMusicStream(CurrentBGM);
+            Raylib.PlayMusicStream(CurrentBGM);
+        }
     }
 }
