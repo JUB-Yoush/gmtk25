@@ -60,6 +60,7 @@ public static class GlobalGameState
 
     public static void UpdateEmotion()
     {
+        
         string whatEmotion = dialogue[dialogueIndex].emotion.ToString();
             switch (whatEmotion)
             {

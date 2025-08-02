@@ -91,7 +91,7 @@ public static class DialogueHandler
                 GlobalGameState.currentState = GameStates.GAME;
             }
             else
-            {
+            {//hurts to read but it works
                 if (canDrawText)
                 {
                     GlobalGameState.UpdateEmotion();
