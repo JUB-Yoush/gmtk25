@@ -59,8 +59,11 @@ public static class DialogueHandler
     public static bool hoverOnArrow;
     public static int arrowBoxWidth = 130;
     public static int arrowBoxHeight = 115;
-    public static int arrowBoxX = 550;
-    public static int arrowBoxY = 360;
+    public static int arrowBoxX = 590;
+    public static int arrowBoxY = 390;
+
+    public static int speakerPosY = 60;
+    public static int speakerPosX = 145;
 
     public static readonly Rectangle StartBtnBox = new(
         arrowBoxX,
@@ -74,10 +77,9 @@ public static class DialogueHandler
         Vec2 mousePos = Raylib.GetMousePosition();
         Rectangle mouseHbox = new(mousePos.X, mousePos.Y, 4, 4);
 
-        Raylib.DrawRectangleLinesEx(StartBtnBox, 2, Color.Red);
 
         hoverOnArrow = Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox);
-
+        
         if (hoverOnArrow && Raylib.IsMouseButtonPressed(MouseButton.Left))
         {
             GlobalGameState.IncrementDI();
@@ -116,7 +118,7 @@ public static class DialogueHandler
     {
         List<String> cutDialogue = new List<String>();
 
-        char[] seperators = new char[] { ' ', '.', ',', '!', '?', ';', ':', '—' };
+        char[] seperators = new char[] { ' ', '.', ',', '!', '?', ';', ':', '-' };
 
         String line = "";
 
