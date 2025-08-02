@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Reflection;
+using DialogueParser;
 using Helper;
 using Puzzles;
 using RayGUI_cs;
@@ -110,24 +111,7 @@ public static class Draw
         Raylib.DrawTexture(GetTexture("talkFrame"), 0, 0, Color.White);
     }
 
-    public static void VNDialogue()
-    {
-        //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
-        Raylib.DrawText(
-            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].speaker,
-            61,
-            343,
-            20,
-            textCol
-        );
-        Raylib.DrawText(
-            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].text.ToString(),
-            61,
-            400,
-            20,
-            textCol
-        );
-    }
+    
 
     public static void DrawPuzzle(Puzzle g)
     {
@@ -300,11 +284,11 @@ public static class Draw
                 break;
             case GameStates.INTRO:
                 DrawVNBg();
-                VNDialogue();
+                DialogueHandler.Update();
                 break;
             case GameStates.OUTRO:
                 DrawVNBg();
-                VNDialogue();
+                DialogueHandler.Update();
                 break;
             case GameStates.SETTINGS:
                 break;
