@@ -1,6 +1,7 @@
 ﻿using Puzzles;
 using Raylib_cs;
 using Title;
+using DialogueParser;
 
 namespace Gmtk;
 
@@ -16,9 +17,11 @@ class Program
         
 
         Puzzle g = PuzzleLoader.LoadPuzzle();
+        
+        
         Draw.SetupRenderer();
         Draw.LoadTextures();
-      
+        Dialogue.LoadDialogue();
 
         while (!Raylib.WindowShouldClose())
         {
@@ -26,7 +29,7 @@ class Program
             switch (GlobalGameState.currentState)
             {
                 case GameStates.TITLE:
-
+                    
                     break;
                 case GameStates.INTRO:
                     Puzzle.Update(g);
