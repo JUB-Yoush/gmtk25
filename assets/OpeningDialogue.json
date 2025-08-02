@@ -3,22 +3,22 @@
         "dialogue": [
         {
             "speaker": "Mac",
-            "text": "Finally.  What took you so long to answer?  We’re pressed for time, if you could tell by the rumbling.",
+            "text": "Finally.  What took you so long to answer?  We're pressed for time, if you could tell by the rumbling.",
             "emotion": "angry"
         },
         {
             "speaker": "Astrid",
-            "text": "I’m sorry.  I need a minute every time I get off ice.  The nausea spells are evil to me.",
+            "text": "I'm sorry.  I need a minute every time I get off ice.  The nausea spells are evil to me.",
             "emotion": "sad"
         },
         {
             "speaker": "Mac",
-            "text": "Right, that’s— that’s fine.  I’m sorry for yelling.  I’m just stressed right now.  Are you feeling any better?",
+            "text": "Right, that's— that's fine.  I'm sorry for yelling.  I'm just stressed right now.  Are you feeling any better?",
             "emotion": "neutral"
         },
         {
             "speaker": "Astrid",
-            "text": "I’ll manage.  What’s the damage?",
+            "text": "I'll manage.  What's the damage?",
             "emotion": "neutral"
         },
         {
@@ -28,7 +28,7 @@
         },
         {
             "speaker": "Mac",
-            "text": "We’re dealing with major structural imbalance, overheating engines, and—",
+            "text": "We're dealing with major structural imbalance, overheating engines, and—",
             "emotion": "neutral"
         },
     
@@ -44,7 +44,7 @@
         },
         {
             "speaker": "Astrid",
-            "text": "Oh!  That doesn’t sound so bad.  It could be worse.  Like that one time we had to excavate tonsil stones.  Remember the smell?",
+            "text": "Oh!  That doesn't sound so bad.  It could be worse.  Like that one time we had to excavate tonsil stones.  Remember the smell?",
             "emotion": "happy"
         },
         {
@@ -64,13 +64,13 @@
         },
         {
             "speaker": "Mac",
-            "text":"Let’s manually route the Galaxy-Bismol.  We’re on opposite ends of the ship, so we’ll need to connect with a stable link.",
+            "text":"Let's manually route the Galaxy-Bismol.  We're on opposite ends of the ship, so we'll need to connect with a stable link.",
             "emotion": "neutral"
 
         },
         {
             "speaker": "Astrid",
-            "text": "I’m right on it.  Oh, and one more thing, Mac.",
+            "text": "I'm right on it.  Oh, and one more thing, Mac.",
             "emotion": "neutral"
         },
         {
@@ -80,7 +80,7 @@
         },
         {
             "speaker": "Astrid",
-            "text": "It’s been a few decades since we spoke.  We’re still flying through space, huh… I hope next time, it’ll be when we land.",
+            "text": "It's been a few decades since we spoke.  We're still flying through space, huh… I hope next time, it'll be when we land.",
             "emotion": "happy"
         },
         {

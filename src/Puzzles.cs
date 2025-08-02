@@ -72,6 +72,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
     public Dictionary<Rectangle, MoveBtn> moveBtnMap = populateBtnMap(size);
     public bool solved = false;
     public List<Vec2i> route = [];
+    public bool playedSFX = false;
 
     public static Dictionary<Rectangle, MoveBtn> populateBtnMap(Vec2i size)
     {
@@ -167,6 +168,20 @@ public class Puzzle(TileType[,] board, Vec2i size)
             return;
         }
         Slide(g, overlapping);
+
+        g.solved = getCircuitStatus(g.board).circuit;
+        if (g.solved)
+        {
+            if (!g.playedSFX)
+            {
+                g.playedSFX = true;
+                AudioManager.playSFX("solve");
+            }
+        }
+        else
+        {
+            g.playedSFX = false;
+        }
     }
 
     public static void UndoSlide(Puzzle g)
@@ -185,6 +200,11 @@ public class Puzzle(TileType[,] board, Vec2i size)
         if (!undoing)
         {
             g.undoStack.Push(overlapping);
+            AudioManager.playSFX("shift");
+        }
+        else
+        {
+            AudioManager.playSFX("click");
         }
 
         Vec2i size = g.puzzleSize;
