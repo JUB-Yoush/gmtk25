@@ -95,17 +95,17 @@
         },
         {
             "speaker": "Astrid",
-            "text": "The dosage wasn’t enough.  The acid is burning our infrastructure!",
+            "text": "The dosage wasn't enough.  The acid is burning our infrastructure!",
             "emotion": "angry"
         },
         {
             "speaker": "Mac",
-            "text": "We need to route more Galaxy-Bismol.  Crap, the system’s all jumbled again.  Astrid, you’re still with me?",
+            "text": "We need to route more Galaxy-Bismol.  Crap, the system's all jumbled again.  Astrid, you're still with me?",
             "emotion": "sad"
         },
         {
             "speaker": "Astrid",
-            "text": "I’m here.  There’s a cap on the medicine.  We’ll need to bypass a few safeguards before administering more.",
+            "text": "I'm here.  There's a cap on the medicine.  We'll need to bypass a few safeguards before administering more.",
             "emotion": "neutral" 
         },
         {
@@ -152,6 +152,36 @@
             "speaker": "Mac",
             "text": "...",
             "emotion": "sad" 
+        },
+        {
+            "speaker": "Astrid",
+            "text": "We did it!",
+            "emotion": "happy" 
+        }, 
+        {            
+            "speaker": "Mac",
+            "text": "Phew",
+            "emotion": "happy" 
+        }, 
+        {
+            "speaker": "Astrid",
+            "text": "Well, it’s back to the ice for both of us.  How far is Lunara from here, do you know?",
+            "emotion": "happy" 
+        },
+        {
+            "speaker": "Mac",
+            "text": "Another decade of travel.  I hear the beaches are beautiful there.",
+            "emotion": "happy"  
+        },
+        {
+            "speaker": "Astrid",
+            "text": "Perhaps we could…  check them out together?",
+            "emotion": "happy"   
+        },
+        {
+             "speaker": "Mac",
+            "text": "I would love to.",
+            "emotion": "happy"             
         }
         ]
     
