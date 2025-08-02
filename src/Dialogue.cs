@@ -29,15 +29,6 @@ public static class DialogueManager
         JObject dialogueData = JObject.Parse(File.ReadAllText("./assets/OpeningDialogue.json"));
         JArray dialogue = (JArray)dialogueData["dialogue"];
 
-        /*
-          JValue speakers = (JValue)dialogue[0]["speaker"];
-          JValue text = (JValue)dialogue[0]["text"];
-          JValue emotion = (JValue)dialogue[0]["emotion"];
-  
-  
-          Console.WriteLine(speakers.ToString(Formatting.Indented));
-          */
-
         foreach (JToken item in dialogue)
         {
             Dialogue obj = new Dialogue();
