@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Security;
 using System.Reflection;
@@ -84,6 +85,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
     public bool solved = false;
     public List<Vec2i> route = [];
     public bool playedSFX = false;
+    public int ComponentCount = GetComponentCount(board);
 
     public static Dictionary<Rectangle, MoveBtn> populateBtnMap(Vec2i size)
     {
@@ -125,13 +127,33 @@ public class Puzzle(TileType[,] board, Vec2i size)
 
     public static void Update(Puzzle g)
     {
+        //PrintRoute(g.route);
+
+        // Console.WriteLine(
+        //     $"{getCircuitStatus(g.board).circuit} {g.route.Count}, {g.ComponentCount}"
+        // );
+
+        g.solved = getCircuitStatus(g.board).circuit && g.route.Count == g.ComponentCount;
+
+        if (g.solved)
+        {
+            if (!g.playedSFX)
+            {
+                g.playedSFX = true;
+                AudioManager.playSFX("solve");
+            }
+        }
+        else
+        {
+            g.playedSFX = false;
+        }
+
         Vec2 mousePos = Raylib.GetMousePosition();
         g.mouseHitbox.X = mousePos.X + TILESIZE / 2;
         g.mouseHitbox.Y = mousePos.Y + TILESIZE / 2;
 
         Rectangle mouseUiHitbox = new(mousePos.X, mousePos.Y, 8, 8);
 
-        g.solved = getCircuitStatus(g.board).circuit;
         g.route = getCircuitStatus(g.board).visited;
 
         MoveBtn? overlapping = null;
@@ -178,21 +200,10 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             return;
         }
+
         Slide(g, overlapping);
 
-        g.solved = getCircuitStatus(g.board).circuit;
-        if (g.solved)
-        {
-            if (!g.playedSFX)
-            {
-                g.playedSFX = true;
-                AudioManager.playSFX("solve");
-            }
-        }
-        else
-        {
-            g.playedSFX = false;
-        }
+        //g.solved = getCircuitStatus(g.board).circuit && g.route.Count == g.ComponentCount;
     }
 
     public static void UndoSlide(Puzzle g)
@@ -296,6 +307,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
         TileType[,] board
     )
     {
+        List<Vec2i> longestRoute = [];
         Vec2i positiveTilePos = GetTile(TileType.POSITIVE, board);
         (bool circuit, int nodeCount, List<Vec2i> visited) dfs(
             TileType[,] board,
@@ -339,7 +351,9 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 if (board[newDir.X, newDir.Y] == TileType.POSITIVE)
                 {
                     visited.Add(newDir);
-                    return (true, nodeCount, JLib.CloneList(visited));
+                    longestRoute =
+                        longestRoute.Count < visited.Count ? JLib.CloneList(visited) : longestRoute;
+                    return (true, nodeCount, longestRoute);
                 }
                 visited.Add(newDir);
                 return dfs(board, newDir, nodeCount, JLib.CloneList(visited));
@@ -364,6 +378,22 @@ public class Puzzle(TileType[,] board, Vec2i size)
         return new(0, 0); //every board should have one, should never reach
     }
 
+    public static int GetComponentCount(TileType[,] board)
+    {
+        int res = 0;
+        for (int x = 0; x < board.GetLength(0); x++)
+        {
+            for (int y = 0; y < board.GetLength(1); y++)
+            {
+                if (board[x, y] != TileType.EMPTY && board[x, y] != TileType.BOX)
+                {
+                    res += 1;
+                }
+            }
+        }
+        return res;
+    }
+
     public static Direction[] getConnections(TileType type)
     {
         return type switch
@@ -381,6 +411,16 @@ public class Puzzle(TileType[,] board, Vec2i size)
             TileType.WIRE_RU => [Direction.RIGHT, Direction.UP],
         };
     }
+
+    public static void PrintRoute(List<Vec2i> route)
+    {
+        foreach (var item in route)
+        {
+            Console.Write(item.ToString());
+            Console.Write("|");
+        }
+        Console.WriteLine("---");
+    }
 }
 
 public static class PuzzleLoader
@@ -393,10 +433,10 @@ public static class PuzzleLoader
         int[,] p1 =
         {
             { 8, 0, 9, 0, 0, 0 },
-            { 5, 6, 0, 0, 0, 0 },
+            { 5, 6, 1, 1, 0, 0 },
             { 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0 },
-            { 0, 6, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0 },
         };
 
