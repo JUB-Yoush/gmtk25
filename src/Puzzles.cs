@@ -435,7 +435,6 @@ public class Puzzle(TileType[,] board, Vec2i size)
 public static class PuzzleLoader
 {
     public static int puzzleIndex = 0;
-    public const int PUZZLE_COUNT = 2;
 
     public static Puzzle LoadPuzzle()
     {
@@ -517,6 +516,15 @@ public static class PuzzleLoader
             { 1, 0, 0, 1, 0, 1 },
             { 0, 2, 0, 0, 0, 0 },
         };
+        int[,] p7b =
+        {
+            { 10, 0, 2, 0, 0, 10 },
+            { 0, 10, 2, 6, 10, 0 },
+            { 0, 0, 0, 5, 2, 0 },
+            { 0, 8, 0, 0, 9, 0 },
+            { 0, 10, 0, 2, 10, 0 },
+            { 10, 0, 0, 0, 0, 10 },
+        };
 
         int[,] p8 =
         {
@@ -567,7 +575,7 @@ public static class PuzzleLoader
             { 0, 0, 0, 0, 0, 0 },
         };
 
-        int[][,] puzzleList = [p0, p1, p2, p3, p4, p5, p6, p7, p8, p11];
+        int[][,] puzzleList = [p11, p0, p1, p2, p3, p4, p5, p6, p7b, p7, p8, p11];
 
         if (puzzleIndex >= puzzleList.Length)
         {
