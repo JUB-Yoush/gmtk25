@@ -15,6 +15,10 @@ public static class GlobalGameState
     public static bool undoPressed = false;
     public static bool resetPressed = false;
     public static bool solvePressed = false;
+    public static bool undoHover = false;
+    public static bool resetHover = false;
+    public static bool solveHover = false;
+    public static bool solveP = false;
     public static bool reseting = false;
     public static bool changingPuzzle = false;
 }

@@ -1,10 +1,13 @@
 using System.Data.Common;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using Helper;
 using Puzzles;
 using Raylib_cs;
+using Color = Raylib_cs.Color;
+using Rectangle = Raylib_cs.Rectangle;
 
 public static class Draw
 {
@@ -12,7 +15,7 @@ public static class Draw
     public const int V_SCREEN_X = 720;
     public const int V_SCREEN_Y = 512;
 
-    public static float vScale = 2;
+    public static float vScale = 1;
     public static int screenWidth = V_SCREEN_X * (int)vScale;
     public static int screenHeight = V_SCREEN_Y * (int)vScale;
 
@@ -24,6 +27,7 @@ public static class Draw
         renderTarget = Raylib.LoadRenderTexture(V_SCREEN_X, V_SCREEN_Y);
         sourceRec = new(0, 0, renderTarget.Texture.Width, -renderTarget.Texture.Height);
         destRec = new(-vScale, -vScale, screenWidth + (vScale * 2), screenHeight + (vScale * 2));
+        Raylib.SetMouseScale(1 / Draw.vScale, 1 / Draw.vScale);
     }
 
     /*
@@ -35,17 +39,22 @@ public static class Draw
      * render buttons as images to get hover working
      * set up virtual screen size
      */
+    //use emuns dofus
     public static readonly Dictionary<string, string> texturePaths = new()
     {
         { "puzzleTiles", "./assets/images/hiresTiles.png" },
         { "gameScreen", "./assets/images/gameScreen.png" },
         { "talkFrame", "./assets/images/TalkFrame.png" },
-        { "icons", "./assets/images/icons.png" },
+        { "icons", "./assets/images/ui_spritesheet.png" },
+        { "girls", "./assets/images/girls.png" },
     };
 
     public static Rectangle SolveHitbox = new(530, 403, 147, 65);
     public static Rectangle UndoHitbox = new(620, 256, 58, 107);
     public static Rectangle ResetHitbox = new(527, 255, 58, 107);
+
+    public const int ICON_SIZE = 48;
+    public static readonly Vec2 FACE_SIZE = new(146, 125);
 
     public static Dictionary<string, Texture2D> textures = [];
 
@@ -62,9 +71,30 @@ public static class Draw
         }
     }
 
-    public static void DrawPuzzleBg()
+    public static void DrawPuzzleBg(Puzzle g)
     {
+        Color solveColor = g.solved ? Color.White : Color.Green;
+        Color undoColor = GlobalGameState.undoHover ? Color.White : Color.Green;
+        Color resetColor = GlobalGameState.resetHover ? Color.White : Color.Green;
         Raylib.DrawTexture(GetTexture("gameScreen"), 0, 0, Color.White);
+        Raylib.DrawTextureRec(
+            GetTexture("icons"),
+            new(2 * ICON_SIZE, 0, ICON_SIZE, ICON_SIZE),
+            new(585, 410),
+            solveColor
+        );
+        Raylib.DrawTextureRec(
+            GetTexture("icons"),
+            new(3 * ICON_SIZE, 0, ICON_SIZE, ICON_SIZE),
+            new(532, 285),
+            resetColor
+        );
+        Raylib.DrawTextureRec(
+            GetTexture("icons"),
+            new(4 * ICON_SIZE, 0, ICON_SIZE, ICON_SIZE),
+            new(625, 286),
+            undoColor
+        );
     }
 
     public static void DrawVNBg()
@@ -199,8 +229,18 @@ public static class Draw
             GetTexture("puzzleTiles"),
             sourceRect,
             destRect,
-            new(Puzzle.TILESIZE / 2, Puzzle.TILESIZE / 2),
+            new Vec2(Puzzle.TILESIZE / 2, Puzzle.TILESIZE / 2),
             rotation,
+            Color.White
+        );
+    }
+
+    public static void DrawFace()
+    {
+        Raylib.DrawTextureRec(
+            GetTexture("girls"),
+            new Raylib_cs.Rectangle(3 * FACE_SIZE.X, 0, FACE_SIZE.X, FACE_SIZE.Y),
+            new Vec2(532, 202 - 125),
             Color.White
         );
     }
@@ -212,7 +252,8 @@ public static class Draw
         switch (GlobalGameState.currentState)
         {
             case GameStates.GAME:
-                DrawPuzzleBg();
+                DrawPuzzleBg(g);
+                DrawFace();
                 DrawPuzzle(g);
                 break;
             case GameStates.INTRO:
@@ -222,7 +263,14 @@ public static class Draw
         Raylib.EndTextureMode();
         Raylib.ClearBackground(Color.Black);
         Raylib.BeginDrawing();
-        Raylib.DrawTexturePro(renderTarget.Texture, sourceRec, destRec, new(0, 0), 0, Color.White);
+        Raylib.DrawTexturePro(
+            renderTarget.Texture,
+            sourceRec,
+            destRec,
+            new Vec2(0, 0),
+            0,
+            Color.White
+        );
         Raylib.EndDrawing();
     }
 }

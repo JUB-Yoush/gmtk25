@@ -113,9 +113,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
 
     public static void Update(Puzzle g)
     {
-        Raylib.SetMouseScale(1 / Draw.vScale, 1 / Draw.vScale);
         Vec2 mousePos = Raylib.GetMousePosition();
-        Console.WriteLine(mousePos);
         g.mouseHitbox.X = mousePos.X + TILESIZE / 2;
         g.mouseHitbox.Y = mousePos.Y + TILESIZE / 2;
 
@@ -134,11 +132,15 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 if (Raylib.CheckCollisionRecs(r, g.mouseHitbox))
                 {
                     overlapping = btn.Value;
-                    Console.WriteLine(overlapping);
                 }
             }
         }
         //who would ever write something this afwul
+
+        GlobalGameState.resetHover = Raylib.CheckCollisionRecs(Draw.ResetHitbox, mouseUiHitbox);
+        GlobalGameState.undoHover = Raylib.CheckCollisionRecs(Draw.UndoHitbox, mouseUiHitbox);
+        GlobalGameState.solveHover = Raylib.CheckCollisionRecs(Draw.SolveHitbox, mouseUiHitbox);
+
         GlobalGameState.resetPressed =
             Raylib.CheckCollisionRecs(Draw.ResetHitbox, mouseUiHitbox)
             && Raylib.IsMouseButtonPressed(MouseButton.Left);

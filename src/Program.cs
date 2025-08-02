@@ -10,7 +10,7 @@ class Program
         Raylib.InitWindow(Draw.screenWidth, Draw.screenHeight, "Hello World");
         Raylib.SetTargetFPS(60);
 
-        GlobalGameState.currentState = GameStates.INTRO; //BUGTEST: Set global var
+        GlobalGameState.currentState = GameStates.GAME; //BUGTEST: Set global var
 
         Puzzle g = PuzzleLoader.LoadPuzzle();
         Draw.SetupRenderer();
