@@ -17,11 +17,12 @@ class Program
         
 
         Puzzle g = PuzzleLoader.LoadPuzzle();
-        
+        List<Dialogue> dialogues =  DialogueManager.LoadDialogue(); //LoadDialogue() produces a dialogue list
+       
         
         Draw.SetupRenderer();
         Draw.LoadTextures();
-        Dialogue.LoadDialogue();
+       
 
         while (!Raylib.WindowShouldClose())
         {
