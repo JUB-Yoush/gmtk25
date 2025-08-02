@@ -49,6 +49,7 @@ public static class AudioManager
 
     public static void playBGM(string id)
     {
+        Raylib.StopMusicStream(CurrentBGM);
         switch (id)
         {
             case ("puzzle"):
