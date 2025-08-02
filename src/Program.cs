@@ -10,7 +10,7 @@ class Program
         Raylib.InitWindow(Draw.screenWidth, Draw.screenHeight, "Hello World");
         Raylib.SetTargetFPS(60);
 
-        GlobalGameState.currentState = GameStates.GAME; //BUGTEST: Set global var
+        GlobalGameState.currentState = GameStates.TITLE; //BUGTEST: Set global var
 
         Puzzle g = PuzzleLoader.LoadPuzzle();
         Draw.SetupRenderer();
@@ -21,6 +21,8 @@ class Program
             switch (GlobalGameState.currentState)
             {
                 case GameStates.TITLE:
+                    TitleHandler.Update();
+                    Draw.DrawFrame(g);
                     break;
                 case GameStates.INTRO:
                     Puzzle.Update(g);
@@ -41,6 +43,10 @@ class Program
                         g = PuzzleLoader.LoadPuzzle();
                         GlobalGameState.changingPuzzle = false;
                     }
+
+                    break;
+
+                case GameStates.SETTINGS:
 
                     break;
                 case GameStates.OUTRO:

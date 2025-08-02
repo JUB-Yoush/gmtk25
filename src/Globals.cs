@@ -1,5 +1,6 @@
 global using Vec2 = System.Numerics.Vector2;
-global using Vec2i = Helper.Vec2i; //(.Y.) jasmine is listening
+global using Vec2i = Helper.Vec2i;
+using System.Globalization; //(.Y.) jasmine is listening
 
 public enum GameStates
 {
@@ -7,6 +8,7 @@ public enum GameStates
     INTRO,
     GAME,
     OUTRO,
+    SETTINGS,
 }
 
 public static class GlobalGameState
@@ -18,7 +20,6 @@ public static class GlobalGameState
     public static bool undoHover = false;
     public static bool resetHover = false;
     public static bool solveHover = false;
-    public static bool solveP = false;
     public static bool reseting = false;
     public static bool changingPuzzle = false;
 }

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Reflection;
 using Helper;
 using Puzzles;
+using RayGUI_cs;
 using Raylib_cs;
 using Color = Raylib_cs.Color;
 using Rectangle = Raylib_cs.Rectangle;
@@ -47,6 +48,7 @@ public static class Draw
         { "talkFrame", "./assets/images/TalkFrame.png" },
         { "icons", "./assets/images/ui_spritesheet.png" },
         { "girls", "./assets/images/girls.png" },
+        { "title", "./assets/images/title-screen.png" },
     };
 
     public static Rectangle SolveHitbox = new(530, 403, 147, 65);
@@ -178,11 +180,6 @@ public static class Draw
                 }
             }
         }
-        // foreach (var pos in g.route)
-        // {
-        //     Vec2i position = Puzzle.GRID_START_POS + new Vec2i(pos.X * gap, pos.Y * gap);
-        //     Raylib.DrawRectangle(position.X, position.Y, 8, 8, Color.Pink);
-        // }
 
         Raylib.DrawRectangle((int)g.mouseHitbox.X - 4, (int)g.mouseHitbox.Y - 4, 8, 8, Color.Green);
         if (g.solved)
@@ -239,10 +236,15 @@ public static class Draw
     {
         Raylib.DrawTextureRec(
             GetTexture("girls"),
-            new Raylib_cs.Rectangle(3 * FACE_SIZE.X, 0, FACE_SIZE.X, FACE_SIZE.Y),
+            new Rectangle(3 * FACE_SIZE.X, 0, FACE_SIZE.X, FACE_SIZE.Y),
             new Vec2(532, 202 - 125),
             Color.White
         );
+    }
+
+    public static void DrawTitleScreen()
+    {
+        Raylib.DrawTexture(GetTexture("title"), 0, 0, Color.White);
     }
 
     public static void DrawFrame(Puzzle g)
@@ -251,6 +253,9 @@ public static class Draw
         Raylib.ClearBackground(Color.Black);
         switch (GlobalGameState.currentState)
         {
+            case GameStates.TITLE:
+                DrawTitleScreen();
+                break;
             case GameStates.GAME:
                 DrawPuzzleBg(g);
                 DrawFace();
@@ -258,6 +263,8 @@ public static class Draw
                 break;
             case GameStates.INTRO:
                 DrawVNBg();
+                break;
+            case GameStates.SETTINGS:
                 break;
         }
         Raylib.EndTextureMode();
