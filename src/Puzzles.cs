@@ -20,17 +20,17 @@ public enum TileType
 {
     EMPTY,
 
-    WIRE_UD,
-    WIRE_LR,
-    WIRE_RD,
-    WIRE_RU,
-    WIRE_LD,
-    WIRE_LU,
+    WIRE_UD = 1,
+    WIRE_LR = 2,
+    WIRE_RD = 3,
+    WIRE_RU = 4,
+    WIRE_LD = 5,
+    WIRE_LU = 6,
 
-    NODE,
-    POSITIVE,
-    NEGATIVE,
-    BOX,
+    NODE = 7,
+    POSITIVE = 8,
+    NEGATIVE = 9,
+    BOX = 10,
     DISABLED,
     ROCK,
 }
@@ -219,15 +219,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
 
     public static void Slide(Puzzle g, MoveBtn overlapping, bool undoing = false)
     {
-        if (!undoing)
-        {
-            g.undoStack.Push(overlapping);
-            AudioManager.playSFX("shift");
-        }
-        else
-        {
-            AudioManager.playSFX("click");
-        }
+        bool nomoved = false;
 
         Vec2i size = g.puzzleSize;
 
@@ -235,6 +227,8 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             if (g.board[size.X - 1, overlapping.index] == TileType.BOX)
             {
+                nomoved = true;
+                AudioManager.playSFX("nomove");
                 return;
             }
             //shift right
@@ -250,6 +244,8 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             if (g.board[0, overlapping.index] == TileType.BOX)
             {
+                nomoved = true;
+                AudioManager.playSFX("nomove");
                 return;
             }
             TileType[] row = JLib.GetRow(g.board, overlapping.index);
@@ -264,6 +260,8 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             if (g.board[overlapping.index, size.Y - 1] == TileType.BOX)
             {
+                nomoved = true;
+                AudioManager.playSFX("nomove");
                 return;
             }
             TileType[] col = JLib.GetCol(g.board, overlapping.index);
@@ -278,6 +276,8 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             if (g.board[overlapping.index, 0] == TileType.BOX)
             {
+                nomoved = true;
+                AudioManager.playSFX("nomove");
                 return;
             }
             TileType[] col = JLib.GetCol(g.board, overlapping.index);
@@ -286,6 +286,23 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 g.board[overlapping.index, y] = col[y + 1];
             }
             g.board[overlapping.index, size.Y - 1] = col[0];
+        }
+
+        if (!undoing)
+        {
+            g.undoStack.Push(overlapping);
+            AudioManager.playSFX("shift");
+        }
+        else
+        {
+            if (nomoved)
+            {
+                AudioManager.playSFX("nomove");
+            }
+            else
+            {
+                AudioManager.playSFX("click");
+            }
         }
     }
 
@@ -430,6 +447,16 @@ public static class PuzzleLoader
 
     public static Puzzle LoadPuzzle()
     {
+        int[,] p0 =
+        {
+            { 8, 0, 9, 0, 0, 0 },
+            { 5, 6, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+        };
+
         int[,] p1 =
         {
             { 8, 0, 9, 0, 0, 0 },
@@ -442,15 +469,55 @@ public static class PuzzleLoader
 
         int[,] p2 =
         {
-            { 10, 10, 0, 10, 10, 0 },
-            { 5, 0, 0, 0, 8, 0 },
-            { 0, 0, 0, 0, 9, 0 },
+            { 0, 3, 5, 0, 0, 0 },
+            { 0, 1, 4, 5, 0, 0 },
+            { 0, 8, 2, 9, 0, 0 },
             { 0, 0, 0, 0, 0, 0 },
-            { 0, 6, 0, 0, 0, 0 },
-            { 10, 10, 0, 10, 10, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
         };
 
         int[,] p3 =
+        {
+            { 0, 0, 2, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 6 },
+            { 0, 3, 4, 0, 0, 0 },
+            { 0, 0, 4, 0, 0, 0 },
+            { 8, 0, 0, 0, 9, 0 },
+            { 0, 0, 5, 0, 0, 0 },
+        };
+
+        int[,] p4 =
+        {
+            { 0, 0, 10, 10, 0, 0 },
+            { 5, 0, 10, 10, 8, 0 },
+            { 0, 0, 10, 10, 9, 0 },
+            { 0, 0, 10, 10, 0, 0 },
+            { 0, 6, 10, 10, 0, 0 },
+            { 0, 0, 10, 10, 0, 0 },
+        };
+
+        int[,] p5 =
+        {
+            { 0, 0, 10, 10, 0, 0 },
+            { 5, 0, 10, 10, 0, 0 },
+            { 0, 10, 8, 0, 10, 0 },
+            { 0, 10, 0, 9, 10, 0 },
+            { 0, 6, 10, 10, 0, 0 },
+            { 0, 0, 10, 10, 0, 0 },
+        };
+
+        int[,] p6 =
+        {
+            { 10, 10, 0, 0, 10, 10 },
+            { 5, 0, 0, 2, 8, 0 },
+            { 0, 0, 0, 0, 9, 0 },
+            { 0, 2, 0, 0, 0, 0 },
+            { 0, 6, 0, 0, 0, 0 },
+            { 10, 0, 0, 10, 10, 10 },
+        };
+
+        int[,] p7 =
         {
             { 8, 9, 10, 0, 0 },
             { 3, 4, 1, 1, 0 },
@@ -458,7 +525,7 @@ public static class PuzzleLoader
             { 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0 },
         };
-        int[][,] puzzleList = [p1, p2, p3];
+        int[][,] puzzleList = [p0, p1, p2, p3, p4, p5, p6, p7];
 
         if (puzzleIndex >= puzzleList.Length)
         {
