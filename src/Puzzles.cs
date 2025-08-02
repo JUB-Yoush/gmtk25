@@ -8,14 +8,6 @@ using Raylib_cs;
 
 namespace Puzzles;
 
-class Tile(TileType type)
-{
-    TileType type = type;
-
-    //public List<Direction> connectors = connectors;
-    public bool lit = false;
-}
-
 public enum TileType
 {
     EMPTY,
@@ -469,12 +461,12 @@ public static class PuzzleLoader
 
         int[,] p2 =
         {
-            { 0, 3, 5, 0, 0, 0 },
-            { 0, 1, 4, 5, 0, 0 },
-            { 0, 8, 2, 9, 0, 0 },
+            { 0, 3, 5, 5, 0, 0 },
             { 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0 },
+            { 0, 8, 0, 0, 1, 0 },
+            { 0, 0, 4, 0, 0, 0 },
+            { 0, 2, 0, 0, 0, 0 },
+            { 0, 0, 0, 9, 0, 0 },
         };
 
         int[,] p3 =
@@ -516,16 +508,27 @@ public static class PuzzleLoader
             { 0, 6, 0, 0, 0, 0 },
             { 10, 0, 0, 10, 10, 10 },
         };
-
         int[,] p7 =
         {
-            { 8, 9, 10, 0, 0 },
-            { 3, 4, 1, 1, 0 },
-            { 0, 0, 7, 1, 0 },
-            { 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0 },
+            { 5, 0, 0, 4, 0, 0 },
+            { 0, 0, 2, 0, 1, 0 },
+            { 0, 2, 10, 10, 2, 0 },
+            { 0, 8, 10, 10, 9, 0 },
+            { 1, 0, 0, 1, 0, 1 },
+            { 0, 2, 0, 0, 0, 0 },
         };
-        int[][,] puzzleList = [p0, p1, p2, p3, p4, p5, p6, p7];
+
+        int[,] p8 =
+        {
+            { 5, 0, 0, 4, 0, 0 },
+            { 0, 0, 2, 0, 1, 0 },
+            { 10, 2, 10, 10, 2, 10 },
+            { 10, 8, 10, 10, 9, 10 },
+            { 1, 0, 0, 1, 0, 1 },
+            { 0, 2, 0, 0, 0, 0 },
+        };
+
+        int[][,] puzzleList = [p0, p1, p2, p3, p4, p5, p6, p7, p8];
 
         if (puzzleIndex >= puzzleList.Length)
         {
