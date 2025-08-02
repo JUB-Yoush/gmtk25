@@ -92,7 +92,67 @@
             "speaker": "Mac",
             "text": "Me, too, Astrid.  The moons are beautiful where I am.  I hope you can see them.",
             "emotion": "happy"
-        } 
+        },
+        {
+            "speaker": "Astrid",
+            "text": "The dosage wasn’t enough.  The acid is burning our infrastructure!",
+            "emotion": "angry"
+        },
+        {
+            "speaker": "Mac",
+            "text": "We need to route more Galaxy-Bismol.  Crap, the system’s all jumbled again.  Astrid, you’re still with me?",
+            "emotion": "sad"
+        },
+        {
+            "speaker": "Astrid",
+            "text": "I’m here.  There’s a cap on the medicine.  We’ll need to bypass a few safeguards before administering more.",
+            "emotion": "neutral" 
+        },
+        {
+            "speaker": "Mac",
+            "text": "Let's do it.",
+            "emotion": "neutral"   
+        },
+        {
+            "speaker": "Mac",
+            "text": "Engines are stabilizing.  Power is returning to core facets of the ship.",
+            "emotion": "neutral"  
+        },
+        {
+            "speaker": "Astrid",
+            "text": "It's not over yet.  One more dose and we should be clear.",
+            "emotion": "neutral"     
+        },
+        {
+            "speaker": "Mac",
+            "text": "Hey, at least I get to spend more time with you.",
+            "emotion": "happy"      
+        },
+        {
+            "speaker": "Astrid",
+            "text": "Ha!  I was going to say the same thing.",
+            "emotion": "happy"  
+        },
+        {
+            "speaker": "Mac",
+            "text": "Oh, well, this is nice, then.  You look really pretty tonight, I forgot to add.",
+            "emotion": "happy"  
+        },
+        {
+            "speaker": "Astrid",
+            "text": "It’s been a whole day?  What time is it?  I swore we started at 08:00 system time.",
+            "emotion": "sad"  
+        },
+        {
+            "speaker": "Astrid",
+            "text": "Wait, did you say I looked pretty?",
+            "emotion": "neutral" 
+        },
+        {
+            "speaker": "Mac",
+            "text": "...",
+            "emotion": "sad" 
+        }
         ]
     
 }

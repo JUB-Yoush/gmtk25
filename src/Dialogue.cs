@@ -27,7 +27,7 @@ public static class DialogueManager
     public static List<Dialogue> LoadDialogue()
     {
         List<Dialogue> dialogues = new List<Dialogue>();
-        JObject dialogueData = JObject.Parse(File.ReadAllText("./assets/OpeningDialogue.json"));
+        JObject dialogueData = JObject.Parse(File.ReadAllText("./assets/Dialogue.json"));
         JArray dialogue = (JArray)dialogueData["dialogue"];
 
         foreach (JToken item in dialogue)
