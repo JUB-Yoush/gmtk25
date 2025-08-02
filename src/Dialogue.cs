@@ -8,7 +8,7 @@ using Raylib_cs;
 
 namespace DialogueParser;
 
-class Dialogue
+public class Dialogue
 {
     public string speaker;
     public string text;
@@ -20,7 +20,7 @@ class Dialogue
     }
 }
 
-static class DialogueManager
+public static class DialogueManager
 {
     public static List<Dialogue> LoadDialogue()
     {

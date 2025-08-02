@@ -14,8 +14,8 @@ class Program
         GlobalGameState.currentState = GameStates.TITLE; //BUGTEST: Set global var
 
         Puzzle g = PuzzleLoader.LoadPuzzle();
-        List<Dialogue> dialogues = DialogueManager.LoadDialogue(); //LoadDialogue() produces a dialogue list
-
+        GlobalGameState.dialogue = DialogueManager.LoadDialogue(); //LoadDialogue() produces a dialogue list
+        GlobalGameState.dialogueIndex = 0;
         Draw.SetupRenderer();
         Draw.LoadTextures();
 
@@ -29,6 +29,7 @@ class Program
                     Draw.DrawFrame(g);
                     break;
                 case GameStates.INTRO:
+                    //insert dialogue handler for clicking
                     Puzzle.Update(g);
                     Draw.DrawFrame(g);
                     break;

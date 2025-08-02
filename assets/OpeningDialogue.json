@@ -2,94 +2,94 @@
   
         "dialogue": [
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "Finally.  What took you so long to answer?  We’re pressed for time, if you could tell by the rumbling.",
             "emotion": "angry"
         },
         {
-            "speaker": "astrid",
+            "speaker": "Astrid",
             "text": "I’m sorry.  I need a minute every time I get off ice.  The nausea spells are evil to me.",
             "emotion": "sad"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "Right, that’s— that’s fine.  I’m sorry for yelling.  I’m just stressed right now.  Are you feeling any better?",
             "emotion": "neutral"
         },
         {
-            "speaker": "astrid",
+            "speaker": "Astrid",
             "text": "I’ll manage.  What’s the damage?",
             "emotion": "neutral"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "We just passed through an asteroid belt.  Whatever was in it was highly acidic, and the ship ingested a lot.",
             "emotion": "neutral"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "We’re dealing with major structural imbalance, overheating engines, and—",
             "emotion": "neutral"
         },
     
         {
-            "speaker": "astrid",
+            "speaker": "Astrid",
             "text": "So the ship has indigestion?",
             "emotion": "neutral"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "More precisely, cosmic gastroesophageal reflux… C-GERD.",
             "emotion": "neutral"
         },
         {
-            "speaker": "astrid",
+            "speaker": "Astrid",
             "text": "Oh!  That doesn’t sound so bad.  It could be worse.  Like that one time we had to excavate tonsil stones.  Remember the smell?",
             "emotion": "happy"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "I tend to forget things I don't like.",
             "emotion": "sad"
         },
         {
-            "speaker": "astrid",
+            "speaker": "Astrid",
             "text": "Do we have any Bepto-Pismaul left?  We can administer it through the digestive pipes and let the ship ride out the heartburn.",
             "emotion": "neutral"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "Stocks are good, but our switchboard is offline.  Rebooting will take more time than we have.",
             "emotion": "neutral"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text":"Let’s manually route the Galaxy-Bismol.  We’re on opposite ends of the ship, so we’ll need to connect with a stable link.",
             "emotion": "neutral"
 
         },
         {
-            "speaker": "astrid",
+            "speaker": "Astrid",
             "text": "I’m right on it.  Oh, and one more thing, Mac.",
             "emotion": "neutral"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "Hm?",
             "emotion": "neutral"
         },
         {
-            "speaker": "astrid",
+            "speaker": "Astrid",
             "text": "It’s been a few decades since we spoke.  We’re still flying through space, huh… I hope next time, it’ll be when we land.",
             "emotion": "happy"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "Ah...",
             "emotion": "neutral"
         },
         {
-            "speaker": "mac",
+            "speaker": "Mac",
             "text": "Me, too, Astrid.  The moons are beautiful where I am.  I hope you can see them.",
             "emotion": "happy"
         }
