@@ -48,7 +48,7 @@ public static class Draw
         { "talkFrame", "./assets/images/TalkFrame.png" },
         { "icons", "./assets/images/ui_spritesheet.png" },
         { "girls", "./assets/images/girls.png" },
-        { "title", "./assets/images/title-screen.png" },
+        { "phone", "./assets/images/callSprites.png" },
     };
 
     public static Rectangle SolveHitbox = new(530, 403, 147, 65);
@@ -244,7 +244,14 @@ public static class Draw
 
     public static void DrawTitleScreen()
     {
-        Raylib.DrawTexture(GetTexture("title"), 0, 0, Color.White);
+        Color phoneColor = TitleHandler.hoverOnPhone ? Color.Green : Color.White;
+        Raylib.DrawTexture(GetTexture("talkFrame"), 0, 0, Color.White);
+        Raylib.DrawTextureRec(
+            GetTexture("phone"),
+            new(TitleHandler.phoneFrame * 320, 0, 320, 225),
+            new(111, 55),
+            phoneColor
+        );
     }
 
     public static void DrawFrame(Puzzle g)
