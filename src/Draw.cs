@@ -41,6 +41,9 @@ public static class Draw
      * set up virtual screen size
      */
     //use emuns dofus
+
+    public static Font font;
+    public static Color textCol = new Color(187, 255, 90);
     public static readonly Dictionary<string, string> texturePaths = new()
     {
         { "puzzleTiles", "./assets/images/hiresTiles.png" },
@@ -67,6 +70,7 @@ public static class Draw
 
     public static void LoadTextures()
     {
+        font = Raylib.LoadFont("./assets/fonts/verdana.ttf");
         foreach (var asset in texturePaths)
         {
             textures.Add(asset.Key, Raylib.LoadTexture(asset.Value));
@@ -99,11 +103,40 @@ public static class Draw
         );
     }
 
+    //TODO: Jasmine
     public static void DrawVNBg()
     {
         Raylib.DrawTexture(GetTexture("talkFrame"), 0, 0, Color.White);
     }
 
+    public static void VNDialogue()
+    {
+        //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
+        Raylib.DrawText(
+            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].speaker,
+            61,
+            343,
+            20,
+            textCol
+        );
+        Raylib.DrawText(
+            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].text.ToString(),
+            61,
+            400,
+            20,
+            textCol
+        );
+    }
+
+    // public static sbyte* Str2Bytes(string s)
+    // {
+    //     unsafe{
+
+    //     return Convert.ToSByte(s);
+    //     }
+    // }
+
+    //---
     public static void DrawPuzzle(Puzzle g)
     {
         g.route = Puzzle.getCircuitStatus(g.board).visited;
@@ -270,6 +303,7 @@ public static class Draw
                 break;
             case GameStates.INTRO:
                 DrawVNBg();
+                VNDialogue();
                 break;
             case GameStates.SETTINGS:
                 break;
