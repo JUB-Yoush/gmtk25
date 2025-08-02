@@ -14,11 +14,13 @@ public static class TitleHandler
     public static bool hoverOnPhone = false;
     public static readonly Rectangle StartBtnBox = new(111, 55, 320, 255);
 
+    public static float phoneRingTimer = 0;
+
     public static int frame = 0;
     public static double frametimer = 0;
     public const int ANIM_FRAMES = 3;
     public const int ENTITY_TILE_SIZE = 16;
-    public const int FPS = 10;
+    public const int FPS = 15;
 
     public static void Update()
     {
@@ -42,5 +44,12 @@ public static class TitleHandler
             Math.Pow(ANIM_FRAMES, 2.0)
         );
         phoneFrame = (int)JLib.Wrap(Math.Floor(frametimer / ANIM_FRAMES), 0, ANIM_FRAMES);
+        phoneRingTimer -= Raylib.GetFrameTime();
+
+        if (phoneRingTimer <= 0)
+        {
+            AudioManager.playSFX("call");
+            phoneRingTimer = 3;
+        }
     }
 }

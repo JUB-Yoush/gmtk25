@@ -206,11 +206,11 @@ public static class Draw
             }
         }
 
-        Raylib.DrawRectangle((int)g.mouseHitbox.X - 4, (int)g.mouseHitbox.Y - 4, 8, 8, Color.Green);
-        if (g.solved)
-        {
-            Raylib.DrawText("solved", 10, 10, 20, Color.Black);
-        }
+        // Raylib.DrawRectangle((int)g.mouseHitbox.X - 4, (int)g.mouseHitbox.Y - 4, 8, 8, Color.Green);
+        // if (g.solved)
+        // {
+        //     Raylib.DrawText("solved", 10, 10, 20, Color.Black);
+        // }
     }
 
     public static Vec2 getUV(int x, int y, Vec2i uv, List<Vec2i> elecRoute)

@@ -9,6 +9,7 @@ public static class AudioManager
     public static Sound shiftSFX;
     public static Sound solveSFX;
     public static Sound clickSFX;
+    public static Sound callSFX;
 
     public static void LoadAudio()
     {
@@ -16,6 +17,7 @@ public static class AudioManager
         shiftSFX = Raylib.LoadSound("./assets/audio/shift.wav");
         solveSFX = Raylib.LoadSound("./assets/audio/solve.wav");
         clickSFX = Raylib.LoadSound("./assets/audio/undo.wav");
+        callSFX = Raylib.LoadSound("./assets/audio/call.wav");
 
         IntroBGM = Raylib.LoadMusicStream("./assets/audio/breaking_the_ice.ogg");
         PuzzleBGM = Raylib.LoadMusicStream("./assets/audio/lost_in_space_with_you.ogg");
@@ -33,6 +35,9 @@ public static class AudioManager
                 break;
             case ("click"):
                 Raylib.PlaySound(clickSFX);
+                break;
+            case ("call"):
+                Raylib.PlaySound(callSFX);
                 break;
         }
     }
