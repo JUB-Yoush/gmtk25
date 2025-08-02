@@ -47,7 +47,6 @@ public static class DialogueManager
 
 public static class DialogueHandler
 {
-
     public static int textBoxWidth = 440;
     public static int textBoxHeight = 90;
 
@@ -55,7 +54,7 @@ public static class DialogueHandler
     public static int textPosY = 380;
 
     public static int dialogueTextSize = 16;
-    public static int maxLineChar = textBoxWidth/8;
+    public static int maxLineChar = textBoxWidth / 8;
 
     public static bool hoverOnArrow;
     public static int arrowBoxWidth = 130;
@@ -63,16 +62,19 @@ public static class DialogueHandler
     public static int arrowBoxX = 550;
     public static int arrowBoxY = 360;
 
-    public static readonly Rectangle StartBtnBox = new(arrowBoxX, arrowBoxY, arrowBoxWidth, arrowBoxHeight);
-
+    public static readonly Rectangle StartBtnBox = new(
+        arrowBoxX,
+        arrowBoxY,
+        arrowBoxWidth,
+        arrowBoxHeight
+    );
 
     public static void Update()
     {
-
         Vec2 mousePos = Raylib.GetMousePosition();
         Rectangle mouseHbox = new(mousePos.X, mousePos.Y, 4, 4);
 
-        Raylib.DrawRectangleLinesEx(StartBtnBox,2, Color.Red);
+        Raylib.DrawRectangleLinesEx(StartBtnBox, 2, Color.Red);
 
         hoverOnArrow = Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox);
 
@@ -83,7 +85,6 @@ public static class DialogueHandler
             {
                 GlobalGameState.currentState = GameStates.GAME;
             }
-            
         }
 
         //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
@@ -95,35 +96,29 @@ public static class DialogueHandler
             Draw.textCol
         );
 
-
-        List<String> dialogue = CutDialogue(GlobalGameState.dialogue[GlobalGameState.dialogueIndex].text.ToString());
+        List<String> dialogue = CutDialogue(
+            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].text.ToString()
+        );
 
         for (int i = 0; i < dialogue.Count; i++)
         {
             Raylib.DrawText(
-             dialogue[i],
-             textPosX,
-             textPosY + (i * dialogueTextSize),
-             dialogueTextSize,
-             Draw.textCol
+                dialogue[i],
+                textPosX,
+                textPosY + (i * dialogueTextSize),
+                dialogueTextSize,
+                Draw.textCol
             );
         }
-        
-        
-
     }
-
 
     public static List<String> CutDialogue(String dialogue)
     {
-
         List<String> cutDialogue = new List<String>();
 
-        char[] seperators = new char[] { ' ', '.', ',', '!', '?', ';', ':', '—'};
+        char[] seperators = new char[] { ' ', '.', ',', '!', '?', ';', ':', '—' };
 
-        
         String line = "";
-       
 
         //the dialogue is already short to fit, pass it out of the function
         if (dialogue.Length <= maxLineChar)
@@ -135,10 +130,9 @@ public static class DialogueHandler
         for (int currChar = 0; currChar < dialogue.Length; currChar++)
         {
             line += dialogue[currChar];
-            
+
             if (currChar > 0 && currChar % maxLineChar == 0)
             {
-
                 if (!seperators.Contains(dialogue[currChar]))
                 {
                     line += "-"; //hyphenate if we are cut in the middle of a sentence
@@ -147,13 +141,10 @@ public static class DialogueHandler
                 cutDialogue.Add(line);
                 line = "";
             }
-       }
-      
+            //Console.WriteLine($"{currChar}:{dialogue[currChar]}");
+        }
+        cutDialogue.Add(line);
+
         return cutDialogue;
     }
-
-       
-    
-
- 
 }
