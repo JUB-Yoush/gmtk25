@@ -79,9 +79,10 @@ public static class Draw
 
     public static void DrawPuzzleBg(Puzzle g)
     {
-        Color solveColor = g.solved ? Color.White : Color.Green;
-        Color undoColor = GlobalGameState.undoHover ? Color.White : Color.Green;
-        Color resetColor = GlobalGameState.resetHover ? Color.White : Color.Green;
+        Color solveColor = g.solved ? Color.Green : Color.White;
+        Color undoColor = GlobalGameState.undoHover ? Color.Green : Color.White;
+        Color resetColor = GlobalGameState.resetHover ? Color.Green : Color.White;
+
         Raylib.DrawTexture(GetTexture("gameScreen"), 0, 0, Color.White);
         Raylib.DrawTextureRec(
             GetTexture("icons"),
@@ -128,15 +129,6 @@ public static class Draw
         );
     }
 
-    // public static sbyte* Str2Bytes(string s)
-    // {
-    //     unsafe{
-
-    //     return Convert.ToSByte(s);
-    //     }
-    // }
-
-    //---
     public static void DrawPuzzle(Puzzle g)
     {
         g.route = Puzzle.getCircuitStatus(g.board).visited;
@@ -218,7 +210,6 @@ public static class Draw
         if (g.solved)
         {
             Raylib.DrawText("solved", 10, 10, 20, Color.Black);
-            Raylib.DrawText($"{g.route.Count}", 10, 30, 20, Color.Black);
         }
     }
 
@@ -291,6 +282,7 @@ public static class Draw
     {
         Raylib.BeginTextureMode(renderTarget);
         Raylib.ClearBackground(Color.Black);
+        Console.WriteLine(GlobalGameState.currentState);
         switch (GlobalGameState.currentState)
         {
             case GameStates.TITLE:
@@ -302,6 +294,10 @@ public static class Draw
                 DrawPuzzle(g);
                 break;
             case GameStates.INTRO:
+                DrawVNBg();
+                VNDialogue();
+                break;
+            case GameStates.OUTRO:
                 DrawVNBg();
                 VNDialogue();
                 break;

@@ -57,6 +57,7 @@ class Program
 
                     break;
                 case GameStates.OUTRO:
+                    Draw.DrawFrame(g);
                     break;
             }
             AudioManager.update();

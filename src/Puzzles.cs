@@ -54,11 +54,11 @@ public class MoveBtn(RowOrCol type, int dir, int index)
 
 public class Puzzle(TileType[,] board, Vec2i size)
 {
-    public static Vec2i GRID_START_POS = new(138, 130);
+    public static Vec2i GRID_START_POS = new(145, 130);
     public static int TILESIZE = 47;
     public static int TILEGAP = 49;
     public static int BUTTONGAP = 49;
-    public static int BUTTONGAPREAL = 10;
+    public static int BUTTONGAPREAL = 20;
     public static Vec2i BTN_START_POS = new(
         GRID_START_POS.X - BUTTONGAP,
         GRID_START_POS.Y - BUTTONGAP
@@ -389,11 +389,12 @@ public static class PuzzleLoader
         };
         int[,] p1 =
         {
-            { 10, 10, 0, 10, 10 },
-            { 5, 0, 0, 0, 8 },
-            { 0, 0, 0, 0, 9 },
-            { 0, 6, 0, 0, 0 },
-            { 10, 10, 0, 10, 10 },
+            { 10, 10, 0, 10, 10, 0 },
+            { 5, 0, 0, 0, 8, 0 },
+            { 0, 0, 0, 0, 9, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 6, 0, 0, 0, 0 },
+            { 10, 10, 0, 10, 10, 0 },
         };
 
         int[,] p3 =
@@ -405,6 +406,12 @@ public static class PuzzleLoader
             { 0, 0, 0, 0, 0 },
         };
         int[][,] puzzleList = [p1, p2, p3];
+
+        if (puzzleIndex >= puzzleList.Length)
+        {
+            GlobalGameState.currentState = GameStates.OUTRO;
+            return null;
+        }
 
         int[,] currentPuzzle = puzzleList[puzzleIndex];
         Puzzle p = new(
