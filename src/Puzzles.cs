@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Security;
 using System.Reflection;
@@ -7,29 +8,21 @@ using Raylib_cs;
 
 namespace Puzzles;
 
-class Tile(TileType type)
-{
-    TileType type = type;
-
-    //public List<Direction> connectors = connectors;
-    public bool lit = false;
-}
-
 public enum TileType
 {
     EMPTY,
 
-    WIRE_UD,
-    WIRE_LR,
-    WIRE_RD,
-    WIRE_RU,
-    WIRE_LD,
-    WIRE_LU,
+    WIRE_UD = 1,
+    WIRE_LR = 2,
+    WIRE_RD = 3,
+    WIRE_RU = 4,
+    WIRE_LD = 5,
+    WIRE_LU = 6,
 
-    NODE,
-    POSITIVE,
-    NEGATIVE,
-    BOX,
+    NODE = 7,
+    POSITIVE = 8,
+    NEGATIVE = 9,
+    BOX = 10,
     DISABLED,
     ROCK,
 }
@@ -84,6 +77,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
     public bool solved = false;
     public List<Vec2i> route = [];
     public bool playedSFX = false;
+    public int ComponentCount = GetComponentCount(board);
 
     public static Dictionary<Rectangle, MoveBtn> populateBtnMap(Vec2i size)
     {
@@ -125,13 +119,33 @@ public class Puzzle(TileType[,] board, Vec2i size)
 
     public static void Update(Puzzle g)
     {
+        //PrintRoute(g.route);
+
+        // Console.WriteLine(
+        //     $"{getCircuitStatus(g.board).circuit} {g.route.Count}, {g.ComponentCount}"
+        // );
+
+        g.solved = getCircuitStatus(g.board).circuit && g.route.Count == g.ComponentCount;
+
+        if (g.solved)
+        {
+            if (!g.playedSFX)
+            {
+                g.playedSFX = true;
+                AudioManager.playSFX("solve");
+            }
+        }
+        else
+        {
+            g.playedSFX = false;
+        }
+
         Vec2 mousePos = Raylib.GetMousePosition();
         g.mouseHitbox.X = mousePos.X + TILESIZE / 2;
         g.mouseHitbox.Y = mousePos.Y + TILESIZE / 2;
 
         Rectangle mouseUiHitbox = new(mousePos.X, mousePos.Y, 8, 8);
 
-        g.solved = getCircuitStatus(g.board).circuit;
         g.route = getCircuitStatus(g.board).visited;
 
         MoveBtn? overlapping = null;
@@ -178,21 +192,10 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             return;
         }
+
         Slide(g, overlapping);
 
-        g.solved = getCircuitStatus(g.board).circuit;
-        if (g.solved)
-        {
-            if (!g.playedSFX)
-            {
-                g.playedSFX = true;
-                AudioManager.playSFX("solve");
-            }
-        }
-        else
-        {
-            g.playedSFX = false;
-        }
+        //g.solved = getCircuitStatus(g.board).circuit && g.route.Count == g.ComponentCount;
     }
 
     public static void UndoSlide(Puzzle g)
@@ -208,15 +211,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
 
     public static void Slide(Puzzle g, MoveBtn overlapping, bool undoing = false)
     {
-        if (!undoing)
-        {
-            g.undoStack.Push(overlapping);
-            AudioManager.playSFX("shift");
-        }
-        else
-        {
-            AudioManager.playSFX("click");
-        }
+        bool nomoved = false;
 
         Vec2i size = g.puzzleSize;
 
@@ -224,6 +219,8 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             if (g.board[size.X - 1, overlapping.index] == TileType.BOX)
             {
+                nomoved = true;
+                AudioManager.playSFX("nomove");
                 return;
             }
             //shift right
@@ -239,6 +236,8 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             if (g.board[0, overlapping.index] == TileType.BOX)
             {
+                nomoved = true;
+                AudioManager.playSFX("nomove");
                 return;
             }
             TileType[] row = JLib.GetRow(g.board, overlapping.index);
@@ -253,6 +252,8 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             if (g.board[overlapping.index, size.Y - 1] == TileType.BOX)
             {
+                nomoved = true;
+                AudioManager.playSFX("nomove");
                 return;
             }
             TileType[] col = JLib.GetCol(g.board, overlapping.index);
@@ -267,6 +268,8 @@ public class Puzzle(TileType[,] board, Vec2i size)
         {
             if (g.board[overlapping.index, 0] == TileType.BOX)
             {
+                nomoved = true;
+                AudioManager.playSFX("nomove");
                 return;
             }
             TileType[] col = JLib.GetCol(g.board, overlapping.index);
@@ -275,6 +278,23 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 g.board[overlapping.index, y] = col[y + 1];
             }
             g.board[overlapping.index, size.Y - 1] = col[0];
+        }
+
+        if (!undoing)
+        {
+            g.undoStack.Push(overlapping);
+            AudioManager.playSFX("shift");
+        }
+        else
+        {
+            if (nomoved)
+            {
+                AudioManager.playSFX("nomove");
+            }
+            else
+            {
+                AudioManager.playSFX("click");
+            }
         }
     }
 
@@ -296,6 +316,7 @@ public class Puzzle(TileType[,] board, Vec2i size)
         TileType[,] board
     )
     {
+        List<Vec2i> longestRoute = [];
         Vec2i positiveTilePos = GetTile(TileType.POSITIVE, board);
         (bool circuit, int nodeCount, List<Vec2i> visited) dfs(
             TileType[,] board,
@@ -339,7 +360,9 @@ public class Puzzle(TileType[,] board, Vec2i size)
                 if (board[newDir.X, newDir.Y] == TileType.POSITIVE)
                 {
                     visited.Add(newDir);
-                    return (true, nodeCount, JLib.CloneList(visited));
+                    longestRoute =
+                        longestRoute.Count < visited.Count ? JLib.CloneList(visited) : longestRoute;
+                    return (true, nodeCount, longestRoute);
                 }
                 visited.Add(newDir);
                 return dfs(board, newDir, nodeCount, JLib.CloneList(visited));
@@ -364,6 +387,22 @@ public class Puzzle(TileType[,] board, Vec2i size)
         return new(0, 0); //every board should have one, should never reach
     }
 
+    public static int GetComponentCount(TileType[,] board)
+    {
+        int res = 0;
+        for (int x = 0; x < board.GetLength(0); x++)
+        {
+            for (int y = 0; y < board.GetLength(1); y++)
+            {
+                if (board[x, y] != TileType.EMPTY && board[x, y] != TileType.BOX)
+                {
+                    res += 1;
+                }
+            }
+        }
+        return res;
+    }
+
     public static Direction[] getConnections(TileType type)
     {
         return type switch
@@ -381,6 +420,16 @@ public class Puzzle(TileType[,] board, Vec2i size)
             TileType.WIRE_RU => [Direction.RIGHT, Direction.UP],
         };
     }
+
+    public static void PrintRoute(List<Vec2i> route)
+    {
+        foreach (var item in route)
+        {
+            Console.Write(item.ToString());
+            Console.Write("|");
+        }
+        Console.WriteLine("---");
+    }
 }
 
 public static class PuzzleLoader
@@ -390,33 +439,135 @@ public static class PuzzleLoader
 
     public static Puzzle LoadPuzzle()
     {
-        int[,] p2 =
+        int[,] p0 =
         {
-            { 8, 2, 5, 0, 0 },
-            { 4, 5, 4, 5, 0 },
-            { 6, 4, 5, 4, 5 },
-            { 0, 0, 4, 5, 1 },
-            { 0, 0, 0, 4, 9 },
+            { 8, 0, 9, 0, 0, 0 },
+            { 5, 6, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
         };
+
         int[,] p1 =
         {
-            { 10, 10, 0, 10, 10, 0 },
-            { 5, 0, 0, 0, 8, 0 },
-            { 0, 0, 0, 0, 9, 0 },
+            { 8, 0, 9, 0, 0, 0 },
+            { 5, 6, 1, 1, 0, 0 },
             { 0, 0, 0, 0, 0, 0 },
-            { 0, 6, 0, 0, 0, 0 },
-            { 10, 10, 0, 10, 10, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+        };
+
+        int[,] p2 =
+        {
+            { 0, 3, 5, 5, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 8, 0, 0, 1, 0 },
+            { 0, 0, 4, 0, 0, 0 },
+            { 0, 2, 0, 0, 0, 0 },
+            { 0, 0, 0, 9, 0, 0 },
         };
 
         int[,] p3 =
         {
-            { 8, 9, 10, 0, 0 },
-            { 3, 4, 1, 1, 0 },
-            { 0, 0, 7, 1, 0 },
-            { 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0 },
+            { 0, 0, 2, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 6 },
+            { 0, 3, 4, 0, 0, 0 },
+            { 0, 0, 4, 0, 0, 0 },
+            { 8, 0, 0, 0, 9, 0 },
+            { 0, 0, 5, 0, 0, 0 },
         };
-        int[][,] puzzleList = [p1, p2, p3];
+
+        int[,] p4 =
+        {
+            { 0, 0, 10, 10, 0, 0 },
+            { 5, 0, 10, 10, 8, 0 },
+            { 0, 0, 10, 10, 9, 0 },
+            { 0, 0, 10, 10, 0, 0 },
+            { 0, 6, 10, 10, 0, 0 },
+            { 0, 0, 10, 10, 0, 0 },
+        };
+
+        int[,] p5 =
+        {
+            { 0, 0, 10, 10, 0, 0 },
+            { 5, 0, 10, 10, 0, 0 },
+            { 0, 10, 8, 0, 10, 0 },
+            { 0, 10, 0, 9, 10, 0 },
+            { 0, 6, 10, 10, 0, 0 },
+            { 0, 0, 10, 10, 0, 0 },
+        };
+
+        int[,] p6 =
+        {
+            { 10, 10, 0, 0, 10, 10 },
+            { 5, 0, 0, 2, 8, 0 },
+            { 0, 0, 0, 0, 9, 0 },
+            { 0, 2, 0, 0, 0, 0 },
+            { 0, 6, 0, 0, 0, 0 },
+            { 10, 0, 0, 10, 10, 10 },
+        };
+        int[,] p7 =
+        {
+            { 5, 0, 0, 4, 0, 0 },
+            { 0, 0, 2, 0, 1, 0 },
+            { 0, 2, 10, 10, 2, 0 },
+            { 0, 8, 10, 10, 9, 0 },
+            { 1, 0, 0, 1, 0, 1 },
+            { 0, 2, 0, 0, 0, 0 },
+        };
+
+        int[,] p8 =
+        {
+            { 5, 0, 0, 4, 0, 0 },
+            { 0, 0, 2, 0, 1, 0 },
+            { 10, 2, 10, 10, 2, 10 },
+            { 10, 8, 10, 10, 9, 10 },
+            { 1, 0, 0, 1, 0, 1 },
+            { 0, 2, 0, 0, 0, 0 },
+        };
+        int[,] p9 =
+        {
+            { 8, 2, 2, 2, 2, 5 },
+            { 2, 2, 2, 2, 5, 4 },
+            { 2, 2, 2, 5, 4, 2 },
+            { 2, 2, 5, 4, 2, 2 },
+            { 2, 5, 4, 2, 2, 2 },
+            { 0, 4, 2, 2, 2, 9 },
+        };
+
+        int[,] p10 =
+        {
+            { 8, 2, 2, 2, 2, 5 },
+            { 9, 2, 2, 2, 5, 1 },
+            { 5, 0, 0, 0, 1, 4 },
+            { 1, 3, 2, 2, 6, 0 },
+            { 1, 4, 2, 2, 2, 5 },
+            { 4, 2, 2, 2, 2, 6 },
+        };
+
+        int[,] p11sol =
+        {
+            { 8, 2, 2, 2, 2, 5 },
+            { 9, 2, 2, 2, 5, 1 },
+            { 5, 0, 0, 0, 1, 4 },
+            { 4, 2, 2, 2, 6, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+        };
+
+        int[,] p11 =
+        {
+            { 0, 0, 0, 0, 0, 0 },
+            { 2, 2, 2, 2, 2, 5 },
+            { 1, 5, 1, 9, 2, 0 },
+            { 0, 8, 4, 4, 5, 0 },
+            { 2, 2, 2, 6, 2, 0 },
+            { 0, 0, 0, 0, 0, 0 },
+        };
+
+        int[][,] puzzleList = [p0, p1, p2, p3, p4, p5, p6, p7, p8, p11];
 
         if (puzzleIndex >= puzzleList.Length)
         {
