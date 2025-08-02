@@ -58,8 +58,12 @@ public static class DialogueHandler
     public static int maxLineChar = textBoxWidth/8;
 
     public static bool hoverOnArrow;
+    public static int arrowBoxWidth = 130;
+    public static int arrowBoxHeight = 115;
+    public static int arrowBoxX = 550;
+    public static int arrowBoxY = 360;
 
-    public static Rectangle container = new Rectangle(textPosX, textPosY, textBoxWidth, textBoxHeight);
+    public static readonly Rectangle StartBtnBox = new(arrowBoxX, arrowBoxY, arrowBoxWidth, arrowBoxHeight);
 
 
     public static void Update()
@@ -68,7 +72,14 @@ public static class DialogueHandler
         Vec2 mousePos = Raylib.GetMousePosition();
         Rectangle mouseHbox = new(mousePos.X, mousePos.Y, 4, 4);
 
-        
+        Raylib.DrawRectangleLinesEx(StartBtnBox,2, Color.Red);
+
+        hoverOnArrow = Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox);
+
+        if (hoverOnArrow && Raylib.IsMouseButtonPressed(MouseButton.Left))
+        {  
+            GlobalGameState.IncrementDI();   
+        }
 
         //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
         Raylib.DrawText(
@@ -103,24 +114,31 @@ public static class DialogueHandler
 
         List<String> cutDialogue = new List<String>();
 
-        char[] seperators = new char[] { ' ', '.', ',', '!', '?', ';', ':', };
+        char[] seperators = new char[] { ' ', '.', ',', '!', '?', ';', ':', '—'};
 
         int index = 0;
           String line = "";
+
+        if (dialogue.Length <= maxLineChar)
+        {
+            cutDialogue.Add(dialogue);
+            return cutDialogue;
+          }
      
       while (index < dialogue.Length)
         {
-        
-         
-            if ((index + maxLineChar) > dialogue.Length)
-            {            
+
+
+
+            if ((index + maxLineChar) >= dialogue.Length)
+            {
                 line = dialogue.Substring(index);
             }
             else
             {
-               
+
                 line = dialogue.Substring(index, index + maxLineChar); //cut up to 30~ characters
-                
+
                 char lastChar = line[line.Length - 1];
 
                 //if it is a letter, we need to add a hyphen
@@ -128,10 +146,11 @@ public static class DialogueHandler
                 {
                     line += "-"; //hyphenate if we are cut in the middle of a sentence
                 }
-                Console.WriteLine(line);
+
 
             }
-              index += maxLineChar;
+            index += maxLineChar;
+            Console.WriteLine(line);
             cutDialogue.Add(line);
         }
            

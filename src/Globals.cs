@@ -15,6 +15,14 @@ public static class GlobalGameState
 {
     public static List<Dialogue> dialogue = new List<Dialogue>();
     public static int dialogueIndex;
+
+    public static void IncrementDI()
+    {
+        if (dialogueIndex < dialogue.Count)
+        {
+            dialogueIndex++;
+        } 
+    }
     public static GameStates currentState = GameStates.TITLE; // 0 = title, 1 = intro, 2 = game, 3 = outro
     public static bool undoPressed = false;
     public static bool resetPressed = false;
