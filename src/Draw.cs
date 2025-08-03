@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Reflection;
 using DialogueParser;
 using Helper;
+using Outro;
 using Puzzles;
 using RayGUI_cs;
 using Raylib_cs;
@@ -312,7 +313,7 @@ public static class Draw
                 break;
             case GameStates.OUTRO:
                 DrawVNBg();
-             
+                OutroHandler.Update();
                 break;
             case GameStates.SETTINGS:
                 break;
