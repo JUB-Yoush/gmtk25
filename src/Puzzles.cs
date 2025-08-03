@@ -575,7 +575,7 @@ public static class PuzzleLoader
             { 0, 0, 0, 0, 0, 0 },
         };
 
-        int[][,] puzzleList = [p0, p1, p2, p3, p4, p5, p6, p7b, p7, p8];
+        int[][,] puzzleList = [p0, p1, p2, p3, p4, p5, p6, p7, p7b, p8];
 
         if (puzzleIndex >= puzzleList.Length)
         {

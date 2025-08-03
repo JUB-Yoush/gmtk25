@@ -24,6 +24,7 @@ public static class Draw
 
     public static Rectangle sourceRec;
     public static Rectangle destRec;
+    public static Color poweredColor = new(0, 50, 0, 255);
 
     public static void SetupRenderer()
     {
@@ -56,7 +57,7 @@ public static class Draw
         { "icons", "./assets/images/ui_spritesheet.png" },
         { "girls", "./assets/images/girls.png" },
         { "phone", "./assets/images/callSprites.png" },
-        {"bigGirls", "./assets/images/girls_larger.png" }
+        { "bigGirls", "./assets/images/girls_larger.png" },
     };
 
     public static Rectangle SolveHitbox = new(530, 403, 147, 65);
@@ -65,7 +66,7 @@ public static class Draw
 
     public const int ICON_SIZE = 48;
     public static readonly Vec2 FACE_SIZE = new(146, 125);
-     public static readonly Vec2 LARGER_FACE_SIZE = new(250, 213);
+    public static readonly Vec2 LARGER_FACE_SIZE = new(250, 213);
 
     public static Dictionary<string, Texture2D> textures = [];
 
@@ -113,8 +114,7 @@ public static class Draw
     //TODO: Jasmine
     public static void DrawVNBg()
     {
-         
-         Color arrowColour = DialogueHandler.hoverOnArrow ? Color.Green : Color.White;
+        Color arrowColour = DialogueHandler.hoverOnArrow ? Color.Green : Color.White;
         Raylib.DrawTextureRec(
             GetTexture("icons"),
             new(0 * ICON_SIZE, 0, ICON_SIZE, ICON_SIZE),
@@ -122,21 +122,20 @@ public static class Draw
             arrowColour
         );
 
-       
-            Raylib.DrawTextureRec(
+        Raylib.DrawTextureRec(
             GetTexture("bigGirls"),
-            new((float)GlobalGameState.currEmotion*Draw.LARGER_FACE_SIZE.X,(float)GlobalGameState.currSpeaker*Draw.LARGER_FACE_SIZE.Y,Draw.LARGER_FACE_SIZE.X, Draw.LARGER_FACE_SIZE.Y),
+            new(
+                (float)GlobalGameState.currEmotion * Draw.LARGER_FACE_SIZE.X,
+                (float)GlobalGameState.currSpeaker * Draw.LARGER_FACE_SIZE.Y,
+                Draw.LARGER_FACE_SIZE.X,
+                Draw.LARGER_FACE_SIZE.Y
+            ),
             new Vec2(DialogueHandler.speakerPosX, DialogueHandler.speakerPosY),
             Color.White
-    
         );
 
-             
-        
         Raylib.DrawTexture(GetTexture("talkFrame"), 0, 0, Color.White);
     }
-
-    
 
     public static void DrawPuzzle(Puzzle g)
     {
@@ -165,7 +164,7 @@ public static class Draw
                 rot = 270;
             }
 
-            DrawTile(new(r.X, r.Y), new(5, 0), rot);
+            DrawTile(new(r.X, r.Y), new(5, 0), Color.White, rot);
         }
 
         for (int x = 0; x < board.GetLength(0); x++)
@@ -173,43 +172,47 @@ public static class Draw
             for (int y = 0; y < board.GetLength(1); y++)
             {
                 Vec2i position = Puzzle.GRID_START_POS + new Vec2i(x * gap, y * gap);
+
+                Color drawColor =
+                    g.route.Contains(new(x, y)) && g.solved ? poweredColor : Color.White;
+
                 switch (board[x, y])
                 {
                     case TileType.EMPTY:
-                        DrawTile(position, new(5, 1));
+                        DrawTile(position, new(5, 1), drawColor);
                         break;
                     case TileType.WIRE_UD:
-                        DrawTile(position, getUV(x, y, new(3, 0), g.route));
+                        DrawTile(position, getUV(x, y, new(3, 0), g.route), drawColor);
                         break;
                     case TileType.WIRE_LR:
-                        DrawTile(position, getUV(x, y, new(3, 0), g.route), 90);
+                        DrawTile(position, getUV(x, y, new(3, 0), g.route), drawColor, 90);
                         break;
                     case TileType.WIRE_LD:
-                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 0);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), drawColor, 0);
                         break;
                     case TileType.WIRE_LU:
-                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 90);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), drawColor, 90);
                         break;
                     case TileType.WIRE_RU:
-                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 180);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), drawColor, 180);
                         break;
                     case TileType.WIRE_RD:
-                        DrawTile(position, getUV(x, y, new(2, 0), g.route), 270);
+                        DrawTile(position, getUV(x, y, new(2, 0), g.route), drawColor, 270);
                         break;
                     case TileType.NODE:
-                        DrawTile(position, getUV(x, y, new(4, 0), g.route));
+                        DrawTile(position, getUV(x, y, new(4, 0), g.route), drawColor);
                         break;
                     case TileType.POSITIVE:
-                        DrawTile(position, new(1, 0));
+                        DrawTile(position, new(1, 0), drawColor);
                         break;
                     case TileType.NEGATIVE:
-                        DrawTile(position, new(0, 0));
+                        DrawTile(position, new(0, 0), drawColor);
                         break;
                     case TileType.BOX:
-                        DrawTile(position, new(6, 0));
+                        DrawTile(position, new(6, 0), drawColor);
                         break;
                     case TileType.ROCK:
-                        DrawTile(position, new(5, 1));
+                        DrawTile(position, new(5, 1), drawColor);
                         break;
                 }
             }
@@ -234,6 +237,7 @@ public static class Draw
     public static void DrawTile(
         Vec2 position,
         Vec2 uv,
+        Color renderColor,
         float rotation = 0,
         bool flipx = false,
         bool flipy = false
@@ -245,6 +249,7 @@ public static class Draw
             Puzzle.TILESIZE,
             Puzzle.TILESIZE
         );
+
         if (flipx)
         {
             sourceRect.Width *= -1;
@@ -261,7 +266,7 @@ public static class Draw
             destRect,
             new Vec2(Puzzle.TILESIZE / 2, Puzzle.TILESIZE / 2),
             rotation,
-            Color.White
+            renderColor
         );
     }
 
@@ -308,13 +313,13 @@ public static class Draw
                 DrawPuzzle(g);
                 break;
             case GameStates.INTRO:
-         
+
                 DrawVNBg();
                 DialogueHandler.Update();
                 break;
             case GameStates.OUTRO:
                 DrawVNBg();
-             
+
                 break;
             case GameStates.SETTINGS:
                 break;

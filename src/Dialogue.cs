@@ -77,60 +77,58 @@ public static class DialogueHandler
     {
         Vec2 mousePos = Raylib.GetMousePosition();
         Rectangle mouseHbox = new(mousePos.X, mousePos.Y, 4, 4);
-       
 
         hoverOnArrow = Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox);
 
         if (hoverOnArrow && Raylib.IsMouseButtonPressed(MouseButton.Left))
         {
             GlobalGameState.IncrementDI();
-             canDrawText = GlobalGameState.dialogueIndex < GlobalGameState.dialogue.Count;
-                if (canDrawText)
-                {
-                    GlobalGameState.UpdateEmotion();
-                    GlobalGameState.UpdateSpeaker();
-                }
-            if (GlobalGameState.dialogueIndex == 18 ||
-                GlobalGameState.dialogueIndex == 22 ||
-                GlobalGameState.dialogueIndex == 30)
+            canDrawText = GlobalGameState.dialogueIndex < GlobalGameState.dialogue.Count;
+            if (canDrawText)
             {
-               
+                GlobalGameState.UpdateEmotion();
+                GlobalGameState.UpdateSpeaker();
+            }
+            if (
+                GlobalGameState.dialogueIndex == 18
+                || GlobalGameState.dialogueIndex == 22
+                || GlobalGameState.dialogueIndex == 30
+            )
+            {
                 GlobalGameState.currentState = GameStates.GAME;
             }
             else if (GlobalGameState.dialogueIndex == 36)
             {
                 GlobalGameState.currentState = GameStates.OUTRO;
             }
-            
         }
 
         if (canDrawText)
         {
-          //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
-        Raylib.DrawText(
-            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].speaker,
-            textPosX,
-            343,
-            20,
-            Draw.textCol
-        );
-
-        List<String> dialogue = CutDialogue(
-            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].text.ToString()
-        );
-
-        for (int i = 0; i < dialogue.Count; i++)
-        {
+            //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
             Raylib.DrawText(
-                dialogue[i],
+                GlobalGameState.dialogue[GlobalGameState.dialogueIndex].speaker,
                 textPosX,
-                textPosY + (i * dialogueTextSize),
-                dialogueTextSize,
+                343,
+                20,
                 Draw.textCol
             );
+
+            List<String> dialogue = CutDialogue(
+                GlobalGameState.dialogue[GlobalGameState.dialogueIndex].text.ToString()
+            );
+
+            for (int i = 0; i < dialogue.Count; i++)
+            {
+                Raylib.DrawText(
+                    dialogue[i],
+                    textPosX,
+                    textPosY + (i * dialogueTextSize),
+                    dialogueTextSize,
+                    Draw.textCol
+                );
+            }
         }
-    }
-      
     }
 
     public static List<String> CutDialogue(String dialogue)
