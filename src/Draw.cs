@@ -1,8 +1,10 @@
+using System.Collections;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Reflection;
+using DialogueParser;
 using Helper;
 using Puzzles;
 using RayGUI_cs;
@@ -54,6 +56,7 @@ public static class Draw
         { "icons", "./assets/images/ui_spritesheet.png" },
         { "girls", "./assets/images/girls.png" },
         { "phone", "./assets/images/callSprites.png" },
+        {"bigGirls", "./assets/images/girls_larger.png" }
     };
 
     public static Rectangle SolveHitbox = new(530, 403, 147, 65);
@@ -62,6 +65,7 @@ public static class Draw
 
     public const int ICON_SIZE = 48;
     public static readonly Vec2 FACE_SIZE = new(146, 125);
+     public static readonly Vec2 LARGER_FACE_SIZE = new(250, 213);
 
     public static Dictionary<string, Texture2D> textures = [];
 
@@ -109,27 +113,31 @@ public static class Draw
     //TODO: Jasmine
     public static void DrawVNBg()
     {
+         Color arrowColour = DialogueHandler.hoverOnArrow ? Color.Green : Color.White;
+        Raylib.DrawTextureRec(
+            GetTexture("icons"),
+            new(0 * ICON_SIZE, 0, ICON_SIZE, ICON_SIZE),
+            new(DialogueHandler.arrowBoxX, DialogueHandler.arrowBoxY),
+            arrowColour
+        );
+
+       
+            Raylib.DrawTextureRec(
+            GetTexture("bigGirls"),
+            new((float)GlobalGameState.currEmotion*Draw.LARGER_FACE_SIZE.X,(float)GlobalGameState.currSpeaker*Draw.LARGER_FACE_SIZE.Y,Draw.LARGER_FACE_SIZE.X, Draw.LARGER_FACE_SIZE.Y),
+            new Vec2(DialogueHandler.speakerPosX, DialogueHandler.speakerPosY),
+            Color.White
+    
+        );
+
+             
+
+        
+        
         Raylib.DrawTexture(GetTexture("talkFrame"), 0, 0, Color.White);
     }
 
-    public static void VNDialogue()
-    {
-        //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
-        Raylib.DrawText(
-            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].speaker,
-            61,
-            343,
-            20,
-            textCol
-        );
-        Raylib.DrawText(
-            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].text.ToString(),
-            61,
-            400,
-            20,
-            textCol
-        );
-    }
+    
 
     public static void DrawPuzzle(Puzzle g)
     {
@@ -302,11 +310,11 @@ public static class Draw
                 break;
             case GameStates.INTRO:
                 DrawVNBg();
-                VNDialogue();
+                DialogueHandler.Update();
                 break;
             case GameStates.OUTRO:
                 DrawVNBg();
-                VNDialogue();
+                DialogueHandler.Update();
                 break;
             case GameStates.SETTINGS:
                 break;

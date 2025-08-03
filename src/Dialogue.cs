@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -25,7 +27,7 @@ public static class DialogueManager
     public static List<Dialogue> LoadDialogue()
     {
         List<Dialogue> dialogues = new List<Dialogue>();
-        JObject dialogueData = JObject.Parse(File.ReadAllText("./assets/OpeningDialogue.json"));
+        JObject dialogueData = JObject.Parse(File.ReadAllText("./assets/Dialogue.json"));
         JArray dialogue = (JArray)dialogueData["dialogue"];
 
         foreach (JToken item in dialogue)
@@ -39,5 +41,127 @@ public static class DialogueManager
         }
 
         return dialogues;
+    }
+}
+
+public static class DialogueHandler
+{
+    public static int textBoxWidth = 440;
+    public static int textBoxHeight = 90;
+
+    public static int textPosX = 55;
+    public static int textPosY = 380;
+
+    public static int dialogueTextSize = 16;
+    public static int maxLineChar = textBoxWidth / 8;
+
+    public static bool hoverOnArrow;
+    public static int arrowBoxWidth = 130;
+    public static int arrowBoxHeight = 115;
+    public static int arrowBoxX = 590;
+    public static int arrowBoxY = 390;
+
+    public static int speakerPosY = 60;
+    public static int speakerPosX = 145;
+
+    public static bool canDrawText = true;
+
+    public static readonly Rectangle StartBtnBox = new(
+        arrowBoxX,
+        arrowBoxY,
+        arrowBoxWidth,
+        arrowBoxHeight
+    );
+
+    public static void Update()
+    {
+        Vec2 mousePos = Raylib.GetMousePosition();
+        Rectangle mouseHbox = new(mousePos.X, mousePos.Y, 4, 4);
+       
+
+        hoverOnArrow = Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox);
+
+        if (hoverOnArrow && Raylib.IsMouseButtonPressed(MouseButton.Left))
+        {
+            GlobalGameState.IncrementDI();
+             canDrawText = GlobalGameState.dialogueIndex < GlobalGameState.dialogue.Count;
+            if (GlobalGameState.dialogueIndex == 18)
+            {
+                GlobalGameState.currentState = GameStates.GAME;
+            }
+            else
+            {//hurts to read but it works
+                if (canDrawText)
+                {
+                    GlobalGameState.UpdateEmotion();
+                    GlobalGameState.UpdateSpeaker();
+                }
+
+            }
+        }
+
+        if (canDrawText)
+        {
+          //word wrapping ref: https://www.raylib.com/examples/text/loader.html?name=text_rectangle_bounds
+        Raylib.DrawText(
+            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].speaker,
+            textPosX,
+            343,
+            20,
+            Draw.textCol
+        );
+
+        List<String> dialogue = CutDialogue(
+            GlobalGameState.dialogue[GlobalGameState.dialogueIndex].text.ToString()
+        );
+
+        for (int i = 0; i < dialogue.Count; i++)
+        {
+            Raylib.DrawText(
+                dialogue[i],
+                textPosX,
+                textPosY + (i * dialogueTextSize),
+                dialogueTextSize,
+                Draw.textCol
+            );
+        }
+    }
+      
+    }
+
+    public static List<String> CutDialogue(String dialogue)
+    {
+        List<String> cutDialogue = new List<String>();
+
+        char[] seperators = new char[] { ' ', '.', ',', '!', '?', ';', ':', '-' };
+
+        String line = "";
+
+        //the dialogue is already short to fit, pass it out of the function
+        if (dialogue.Length <= maxLineChar)
+        {
+            cutDialogue.Add(dialogue);
+            return cutDialogue;
+        }
+
+        for (int currChar = 0; currChar < dialogue.Length; currChar++)
+        {
+            line += dialogue[currChar];
+
+            if (currChar > 0 && currChar % maxLineChar == 0)
+            {
+                if (!seperators.Contains(dialogue[currChar]))
+                {
+                    line += "-"; //hyphenate if we are cut in the middle of a sentence
+                }
+
+                cutDialogue.Add(line);
+                line = "";
+            }
+            //Console.WriteLine($"{currChar}:{dialogue[currChar]}");
+        }
+        cutDialogue.Add(line);
+
+        return cutDialogue;
     }
 }

@@ -29,7 +29,7 @@ public static class TitleHandler
 
         hoverOnPhone = Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox);
         if (
-            Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox)
+            hoverOnPhone
             && Raylib.IsMouseButtonPressed(MouseButton.Left)
         )
         {

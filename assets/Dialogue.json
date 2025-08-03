@@ -1,0 +1,188 @@
+{
+  
+        "dialogue": [
+        {
+            "speaker": "Mac",
+            "text": "Finally.  What took you so long to answer?  We're pressed for time, if you could tell by the rumbling.",
+            "emotion": "angry"
+        },
+        {
+            "speaker": "Astrid",
+            "text": "I'm sorry.  I need a minute every time I get off ice.  The nausea spells are evil to me.",
+            "emotion": "sad"
+        },
+        {
+            "speaker": "Mac",
+            "text": "Right, that's- that's fine.  I'm sorry for yelling.  I'm just stressed right now.  Are you feeling any better?",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Astrid",
+            "text": "I'll manage.  What's the damage?",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Mac",
+            "text": "We just passed through an asteroid belt.  Whatever was in it was highly acidic, and the ship ingested a lot.",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Mac",
+            "text": "We're dealing with major structural imbalance, overheating engines, and-",
+            "emotion": "neutral"
+        },
+    
+        {
+            "speaker": "Astrid",
+            "text": "So the ship has indigestion?",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Mac",
+            "text": "More precisely, cosmic gastroesophageal reflux… C-GERD.",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Astrid",
+            "text": "Oh!  That doesn't sound so bad.  It could be worse.  Like that one time we had to excavate tonsil stones.  Remember the smell?",
+            "emotion": "happy"
+        },
+        {
+            "speaker": "Mac",
+            "text": "I tend to forget things I don't like.",
+            "emotion": "sad"
+        },
+        {
+            "speaker": "Astrid",
+            "text": "Do we have any Bepto-Pismaul left?  We can administer it through the digestive pipes and let the ship ride out the heartburn.",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Mac",
+            "text": "Stocks are good, but our switchboard is offline.  Rebooting will take more time than we have.",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Mac",
+            "text":"Let's manually route the Galaxy-Bismol.  We're on opposite ends of the ship, so we'll need to connect with a stable link.",
+            "emotion": "neutral"
+
+        },
+        {
+            "speaker": "Astrid",
+            "text": "I'm right on it.  Oh, and one more thing, Mac.",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Mac",
+            "text": "Hm?",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Astrid",
+            "text": "It's been a few decades since we spoke.  We're still flying through space, huh… I hope next time, it'll be when we land.",
+            "emotion": "happy"
+        },
+        {
+            "speaker": "Mac",
+            "text": "Ah...",
+            "emotion": "neutral"
+        },
+        {
+            "speaker": "Mac",
+            "text": "Me, too, Astrid.  The moons are beautiful where I am.  I hope you can see them.",
+            "emotion": "happy"
+        },
+        {
+            "speaker": "Astrid",
+            "text": "The dosage wasn't enough.  The acid is burning our infrastructure!",
+            "emotion": "angry"
+        },
+        {
+            "speaker": "Mac",
+            "text": "We need to route more Galaxy-Bismol.  Crap, the system's all jumbled again.  Astrid, you're still with me?",
+            "emotion": "sad"
+        },
+        {
+            "speaker": "Astrid",
+            "text": "I'm here.  There's a cap on the medicine.  We'll need to bypass a few safeguards before administering more.",
+            "emotion": "neutral" 
+        },
+        {
+            "speaker": "Mac",
+            "text": "Let's do it.",
+            "emotion": "neutral"   
+        },
+        {
+            "speaker": "Mac",
+            "text": "Engines are stabilizing.  Power is returning to core facets of the ship.",
+            "emotion": "neutral"  
+        },
+        {
+            "speaker": "Astrid",
+            "text": "It's not over yet.  One more dose and we should be clear.",
+            "emotion": "neutral"     
+        },
+        {
+            "speaker": "Mac",
+            "text": "Hey, at least I get to spend more time with you.",
+            "emotion": "happy"      
+        },
+        {
+            "speaker": "Astrid",
+            "text": "Ha!  I was going to say the same thing.",
+            "emotion": "happy"  
+        },
+        {
+            "speaker": "Mac",
+            "text": "Oh, well, this is nice, then.  You look really pretty tonight, I forgot to add.",
+            "emotion": "happy"  
+        },
+        {
+            "speaker": "Astrid",
+            "text": "It's been a whole day?  What time is it?  I swore we started at 08:00 system time.",
+            "emotion": "sad"  
+        },
+        {
+            "speaker": "Astrid",
+            "text": "Wait, did you say I looked pretty?",
+            "emotion": "neutral" 
+        },
+        {
+            "speaker": "Mac",
+            "text": "...",
+            "emotion": "sad" 
+        },
+        {
+            "speaker": "Astrid",
+            "text": "We did it!",
+            "emotion": "happy" 
+        }, 
+        {            
+            "speaker": "Mac",
+            "text": "Phew",
+            "emotion": "happy" 
+        }, 
+        {
+            "speaker": "Astrid",
+            "text": "Well, it's back to the ice for both of us.  How far is Lunara from here, do you know?",
+            "emotion": "happy" 
+        },
+        {
+            "speaker": "Mac",
+            "text": "Another decade of travel.  I hear the beaches are beautiful there.",
+            "emotion": "happy"  
+        },
+        {
+            "speaker": "Astrid",
+            "text": "Perhaps we could…  check them out together?",
+            "emotion": "happy"   
+        },
+        {
+             "speaker": "Mac",
+            "text": "I would love to.",
+            "emotion": "happy"             
+        }
+        ]
+    
+}
