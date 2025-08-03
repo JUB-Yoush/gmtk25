@@ -19,10 +19,26 @@ class Program
         AudioManager.LoadAudio();
         Draw.SetupRenderer();
         Draw.LoadTextures();
-        AudioManager.playBGM("intro");
+        AudioManager.playBGM("puzzle");
 
         while (!Raylib.WindowShouldClose())
         {
+            if (Raylib.IsKeyPressed(KeyboardKey.F11))
+            {
+                Raylib.ToggleBorderlessWindowed();
+                GlobalGameState.fullscreen = !GlobalGameState.fullscreen;
+                if (GlobalGameState.fullscreen)
+                {
+                    Draw.vScale =
+                        (float)Raylib.GetMonitorHeight(Raylib.GetCurrentMonitor())
+                        / (float)Draw.V_SCREEN_Y;
+                }
+                else
+                {
+                    Draw.vScale = 1;
+                }
+                Draw.SetupRenderer();
+            }
             switch (GlobalGameState.currentState)
             {
                 case GameStates.TITLE:

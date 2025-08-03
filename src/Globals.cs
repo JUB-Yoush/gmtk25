@@ -2,6 +2,7 @@ global using Vec2 = System.Numerics.Vector2;
 global using Vec2i = Helper.Vec2i;
 using System.Globalization; //(.Y.) jasmine is listening
 using DialogueParser;
+
 public enum GameStates
 {
     TITLE,
@@ -24,6 +25,6 @@ public static class GlobalGameState
     public static bool solveHover = false;
     public static bool reseting = false;
     public static bool changingPuzzle = false;
+
+    public static bool fullscreen = false;
 }
-
-
