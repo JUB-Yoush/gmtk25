@@ -111,6 +111,7 @@ public static class Draw
     //TODO: Jasmine
     public static void DrawVNBg()
     {
+         
          Color arrowColour = DialogueHandler.hoverOnArrow ? Color.Green : Color.White;
         Raylib.DrawTextureRec(
             GetTexture("icons"),
@@ -129,8 +130,6 @@ public static class Draw
         );
 
              
-
-        
         
         Raylib.DrawTexture(GetTexture("talkFrame"), 0, 0, Color.White);
     }
@@ -307,12 +306,13 @@ public static class Draw
                 DrawPuzzle(g);
                 break;
             case GameStates.INTRO:
+         
                 DrawVNBg();
                 DialogueHandler.Update();
                 break;
             case GameStates.OUTRO:
                 DrawVNBg();
-                DialogueHandler.Update();
+             
                 break;
             case GameStates.SETTINGS:
                 break;
