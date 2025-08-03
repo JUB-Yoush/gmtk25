@@ -17,7 +17,7 @@ class Program
         AudioManager.LoadAudio();
         Draw.SetupRenderer();
         Draw.LoadTextures();
-        //AudioManager.playBGM("puzzle");
+        AudioManager.playBGM("intro");
 
         while (!Raylib.WindowShouldClose())
         {
@@ -69,6 +69,7 @@ class Program
                             || PuzzleLoader.puzzleIndex == 8
                         )
                         {
+                            AudioManager.playBGM("intro");
                             GlobalGameState.currentState = GameStates.INTRO;
                         }
                     }
