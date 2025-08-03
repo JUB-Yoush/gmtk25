@@ -66,7 +66,7 @@ class Program
                         if (
                             PuzzleLoader.puzzleIndex == 1
                             || PuzzleLoader.puzzleIndex == 4
-                            || PuzzleLoader.puzzleIndex == 8
+                            || PuzzleLoader.puzzleIndex == 10
                         )
                         {
                             AudioManager.playBGM("intro");
