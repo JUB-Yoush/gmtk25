@@ -11,11 +11,9 @@ class Program
         Raylib.InitWindow(Draw.screenWidth, Draw.screenHeight, "Hello World");
         Raylib.SetTargetFPS(60);
 
-    
-
         Puzzle g = PuzzleLoader.LoadPuzzle();
         GlobalGameState.dialogue = DialogueManager.LoadDialogue(); //LoadDialogue() produces a dialogue list
-      
+
         AudioManager.LoadAudio();
         Draw.SetupRenderer();
         Draw.LoadTextures();
@@ -32,10 +30,10 @@ class Program
                     break;
                 case GameStates.INTRO:
                     Draw.DrawFrame(g);
-                  
+
                     break;
                 case GameStates.GAME:
-                    
+
                     Puzzle.Update(g);
                     Draw.DrawFrame(g);
                     if (Raylib.IsKeyPressed(KeyboardKey.R) || GlobalGameState.reseting)
@@ -46,17 +44,18 @@ class Program
                     }
                     if (Raylib.IsKeyPressed(KeyboardKey.One) || GlobalGameState.changingPuzzle)
                     {
-                       
-                   
                         PuzzleLoader.puzzleIndex++;
                         g = PuzzleLoader.LoadPuzzle();
                         GlobalGameState.changingPuzzle = false;
-                        if (PuzzleLoader.puzzleIndex == 1 || PuzzleLoader.puzzleIndex == 4 || PuzzleLoader.puzzleIndex == 8)
+                        if (
+                            PuzzleLoader.puzzleIndex == 1
+                            || PuzzleLoader.puzzleIndex == 4
+                            || PuzzleLoader.puzzleIndex == 8
+                        )
                         {
+                            AudioManager.playBGM("intro");
                             GlobalGameState.currentState = GameStates.INTRO;
-                         }
-
-                        
+                        }
                     }
 
                     break;

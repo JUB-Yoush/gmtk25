@@ -53,11 +53,19 @@ public static class AudioManager
         switch (id)
         {
             case ("puzzle"):
+                if (CurrentBGM.Equals(PuzzleBGM))
+                {
+                    return;
+                }
                 Raylib.StopMusicStream(PuzzleBGM);
                 CurrentBGM = PuzzleBGM;
                 Raylib.PlayMusicStream(PuzzleBGM);
                 break;
             case ("intro"):
+                if (CurrentBGM.Equals(IntroBGM))
+                {
+                    return;
+                }
                 Raylib.StopMusicStream(IntroBGM);
                 CurrentBGM = IntroBGM;
                 Raylib.PlayMusicStream(IntroBGM);

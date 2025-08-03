@@ -95,6 +95,7 @@ public static class DialogueHandler
                 || GlobalGameState.dialogueIndex == 30
             )
             {
+                AudioManager.playBGM("puzzle");
                 GlobalGameState.currentState = GameStates.GAME;
             }
             else if (GlobalGameState.dialogueIndex == 36)
