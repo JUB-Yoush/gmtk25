@@ -55,7 +55,8 @@ public static class Draw
         { "icons", "./assets/images/ui_spritesheet.png" },
         { "girls", "./assets/images/girls.png" },
         { "phone", "./assets/images/callSprites.png" },
-        {"bigGirls", "./assets/images/girls_larger.png" }
+        {"bigGirls", "./assets/images/girls_larger.png" },
+        {"end", "./assets/images/endScreen.png"},
     };
 
     public static Rectangle SolveHitbox = new(530, 403, 147, 65);
@@ -135,7 +136,12 @@ public static class Draw
         Raylib.DrawTexture(GetTexture("talkFrame"), 0, 0, Color.White);
     }
 
+    public static void DrawEndBg()
+    {
     
+    Raylib.DrawTexture(GetTexture("end"), 0, 0, Color.White);
+}
+
 
     public static void DrawPuzzle(Puzzle g)
     {

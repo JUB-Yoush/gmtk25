@@ -14,11 +14,13 @@ namespace Outro;
 public static class OutroHandler
 {
     public static Color col = new Color(0, 0, 0, 0 );
+    public static Color startDark = new Color(0, 0, 0, 255);
     public static Rectangle rect = new Rectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
     
     public static float fadeSpeed = 2.0f;
 
     public static bool fadeDone = false;
+    public static bool allDone = false;
 
     public static float alphaCheck = 0;
     
@@ -43,10 +45,25 @@ public static class OutroHandler
         }
         else
         {
-            Raylib.DrawRectangleRec(rect, Color.Black);
+            Draw.DrawEndBg();
+            Raylib.DrawRectangleRec(rect, startDark);
+            if (alphaCheck > 0)
+            {
+                startDark.A -= (byte)fadeSpeed;
+                alphaCheck -= fadeSpeed;
+
+                if (alphaCheck <= 0)
+                {
+                    allDone = true;
+                }
+            }
+
         }
 
-
+        if (allDone)
+        {
+            Draw.DrawEndBg();
+        }
 
     }
     }
