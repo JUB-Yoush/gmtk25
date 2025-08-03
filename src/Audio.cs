@@ -65,6 +65,11 @@ public static class AudioManager
         }
     }
 
+    public static void StopBGM()
+    {
+        Raylib.StopMusicStream(CurrentBGM);
+    }
+
     public static void update()
     {
         Raylib.UpdateMusicStream(CurrentBGM);
