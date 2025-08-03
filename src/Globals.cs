@@ -29,7 +29,7 @@ public enum CurrentSpeaker
 public static class GlobalGameState
 {
     public static List<Dialogue> dialogue = new List<Dialogue>();
-    public static int dialogueIndex;
+    public static int dialogueIndex=0;
     //18 lines total for the intro
     public static void IncrementDI()
     {

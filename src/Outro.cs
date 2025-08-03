@@ -12,8 +12,5 @@ namespace Outro;
 
 public static class OutroHandler
 {
-    public static void Update()
-    {
-        
-    }
+   
 }

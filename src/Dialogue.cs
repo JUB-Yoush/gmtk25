@@ -85,19 +85,23 @@ public static class DialogueHandler
         {
             GlobalGameState.IncrementDI();
              canDrawText = GlobalGameState.dialogueIndex < GlobalGameState.dialogue.Count;
-            if (GlobalGameState.dialogueIndex == 18)
-            {
-                GlobalGameState.currentState = GameStates.GAME;
-            }
-            else
-            {//hurts to read but it works
                 if (canDrawText)
                 {
                     GlobalGameState.UpdateEmotion();
                     GlobalGameState.UpdateSpeaker();
                 }
-
+            if (GlobalGameState.dialogueIndex == 18 ||
+                GlobalGameState.dialogueIndex == 22 ||
+                GlobalGameState.dialogueIndex == 30)
+            {
+               
+                GlobalGameState.currentState = GameStates.GAME;
             }
+            else if (GlobalGameState.dialogueIndex == 36)
+            {
+                GlobalGameState.currentState = GameStates.OUTRO;
+            }
+            
         }
 
         if (canDrawText)
