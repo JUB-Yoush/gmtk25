@@ -1,3 +1,4 @@
+using System;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Numerics;
@@ -28,10 +29,7 @@ public static class TitleHandler
         Rectangle mouseHbox = new(mousePos.X, mousePos.Y, 4, 4);
 
         hoverOnPhone = Raylib.CheckCollisionRecs(mouseHbox, StartBtnBox);
-        if (
-            hoverOnPhone
-            && Raylib.IsMouseButtonPressed(MouseButton.Left)
-        )
+        if (hoverOnPhone && Raylib.IsMouseButtonPressed(MouseButton.Left))
         {
             GlobalGameState.currentState = GameStates.INTRO;
         }

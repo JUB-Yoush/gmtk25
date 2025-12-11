@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.IO;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -83,7 +86,7 @@ public static class DialogueHandler
         if (hoverOnArrow && Raylib.IsMouseButtonPressed(MouseButton.Left))
         {
             GlobalGameState.IncrementDI();
-            canDrawText = GlobalGameState.dialogueIndex < GlobalGameState.dialogue.Count;
+            canDrawText = GlobalGameState.dialogueIndex < GlobalGameState.dialogue.Count();
             if (canDrawText)
             {
                 GlobalGameState.UpdateEmotion();
@@ -116,7 +119,7 @@ public static class DialogueHandler
                 Draw.textCol
             );
 
-            List<String> dialogue = CutDialogue(
+            List<string> dialogue = CutDialogue(
                 GlobalGameState.dialogue[GlobalGameState.dialogueIndex].text.ToString()
             );
 
@@ -133,13 +136,13 @@ public static class DialogueHandler
         }
     }
 
-    public static List<String> CutDialogue(String dialogue)
+    public static List<string> CutDialogue(string dialogue)
     {
-        List<String> cutDialogue = new List<String>();
+        List<string> cutDialogue = [];
 
-        char[] seperators = new char[] { ' ', '.', ',', '!', '?', ';', ':', '-' };
+        char[] seperators = [' ', '.', ',', '!', '?', ';', ':', '-'];
 
-        String line = "";
+        string line = "";
 
         //the dialogue is already short to fit, pass it out of the function
         if (dialogue.Length <= maxLineChar)

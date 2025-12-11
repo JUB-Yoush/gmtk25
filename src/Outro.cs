@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics;
@@ -13,20 +14,24 @@ namespace Outro;
 
 public static class OutroHandler
 {
-    public static Color col = new Color(0, 0, 0, 0 );
+    public static Color col = new Color(0, 0, 0, 0);
     public static Color startDark = new Color(0, 0, 0, 255);
-    public static Rectangle rect = new Rectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
-    
+    public static Rectangle rect = new Rectangle(
+        0,
+        0,
+        Raylib.GetScreenWidth(),
+        Raylib.GetScreenHeight()
+    );
+
     public static float fadeSpeed = 2.0f;
 
     public static bool fadeDone = false;
     public static bool allDone = false;
 
     public static float alphaCheck = 0;
-    
+
     public static void Update()
     {
-
         if (!fadeDone)
         {
             Raylib.DrawRectangleRec(rect, col);
@@ -36,11 +41,9 @@ public static class OutroHandler
                 alphaCheck += fadeSpeed;
                 if (alphaCheck >= 255)
                 {
-
                     Console.WriteLine("The fade is most fading");
                     fadeDone = true;
                 }
-
             }
         }
         else
@@ -57,14 +60,11 @@ public static class OutroHandler
                     allDone = true;
                 }
             }
-
         }
 
         if (allDone)
         {
             Draw.DrawEndBg();
         }
-
     }
-    }
- 
+}
